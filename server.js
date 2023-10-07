@@ -3,16 +3,17 @@ const fs = require("fs");
 const PORT = process.env.PORT || 4300;
 const path = require("path");
 const url = require("url");
-const contentType = require("./private/contentType.js");
+const contentType = require("./contentType.js");
 
 const server = http.createServer((req, res) => {
   const { pathname, query } = url.parse(req.url, true);
   console.log(pathname);
+  const filePath = path.join(__dirname, "public", "index.html");
   if (pathname !== "/") {
     contentType.serveType(pathname, res);
   }
   if (pathname == "/") {
-    fs.readFile("../Spring well/public/index.html", "utf-8", (err, data) => {
+    fs.readFile(filePath, "utf-8", (err, data) => {
       if (err) {
         console.log(err);
         res.writeHead(500, { "Content-Type": "application/json" });
