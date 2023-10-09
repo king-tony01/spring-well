@@ -33,6 +33,20 @@ function serveType(link, res) {
         }
       });
       break;
+    case ".png":
+      contentType = "image/png";
+      const filePath3 = path.join(__dirname, "", link);
+      fs.readFile(filePath3, "", (err, data) => {
+        if (err) {
+          console.log(err);
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ message: "Internal server error!" }));
+        } else {
+          res.writeHead(200, { "Content-Type": contentType });
+          res.end(data);
+        }
+      });
+      break;
   }
 }
 
