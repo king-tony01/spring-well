@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/private/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!--<link rel="stylesheet" href="/fontawesome-free-6.3.0-web/css/all.css" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Springwell Trust | Dashboard</title>
+  </head>
+  <body>
+    <nav>
+      <h1>Springwell Trust</h1>
+      <br /><br />
+      <ul>
+        <li>
+          <button class="active">
+            <i class="fas fa-dashboard"></i>Dashboard
+          </button>
+        </li>
+        <li>
+          <button><i class="fas fa-arrow-trend-up"></i>Statistics</button>
+        </li>
+        <li>
+          <button><i class="fas fa-wallet"></i>Wallet</button>
+        </li>
+        <li>
+          <button><i class="fas fa-arrow-right-arrow-left"></i>Transfer</button>
+        </li>
+        <li>
+          <button><i class="fas fa-envelope-open"></i>Message</button>
+        </li>
+        <li>
+          <button><i class="fas fa-heart"></i>Favorite</button>
+        </li>
+        <li>
+          <button><i class="fas fa-user"></i>Profile</button>
+        </li>
+      </ul>
+      <ul class="bottom-nav">
+        <li>
+          <button><i class="fas fa-circle-question"></i>Message</button>
+        </li>
+        <li>
+          <button><i class="fas fa-gear"></i>Favorite</button>
+        </li>
+        <li>
+          <button><i class="fas fa-sign-out"></i>Log out</button>
+        </li>
+      </ul>
+    </nav>
+    <main>
+      <section class="header">
+        <h1 class="greet">Hello, King 👋</h1>
+        <div class="wrap">
+          <div class="search">
+            <i class="fas fa-search"></i>
+            <input
+              type="search"
+              name="search"
+              id="search"
+              placeholder="Search"
+            />
+          </div>
+          <i class="fas fa-bell"></i>
+          <img src="/images/profile.jpg" alt="" class="user-pic" id="userpic" />
+        </div>
+      </section>
+      <br />
+      <section class="page">
+        <div class="wrapper">
+          <div>
+            <div class="cards-container">
+              <div class="cards-head">
+                <h3>My Cards</h3>
+                <button>Add New</button>
+              </div>
+              <div class="cards-con-main">
+                <div class="atm">
+                  <img src="/images/visa.png" alt="" />
+                  <b class="balance">$ 5,000</b>
+                  <b class="card-number"
+                    ><span>1230</span><span>4670</span><span>6630</span></b
+                  >
+                  <span class="card-name">Okolie Amuche A.</span>
+                </div>
+                <div class="atm">
+                  <img src="/images/master.png" alt="" />
+                  <b class="balance">$ 200,000</b>
+                  <b class="card-number"
+                    ><span>1230</span><span>4670</span><span>6630</span></b
+                  >
+                  <span class="card-name">Okolie Amuche A.</span>
+                </div>
+              </div>
+            </div>
+            <div class="transactions">
+              <div class="transactions-head">
+                <h3>Transactions</h3>
+                <select>
+                  <option value="Month">Month</option>
+                  <option value="Week">Week</option>
+                </select>
+              </div>
+              <ul class="transactions-list">
+                <li>
+                  <div>
+                    <i class="far fa-image"></i><span>Wedding Video</span>
+                  </div>
+                  <span class="date">April 10, 2023</span> <span>$200</span
+                  ><i class="fas fa-ellipsis-vertical"></i>
+                </li>
+                <li>
+                  <div>
+                    <i class="far fa-image"></i><span>Wedding Video</span>
+                  </div>
+                  <span class="date">April 10, 2023</span> <span>$200</span
+                  ><i class="fas fa-ellipsis-vertical"></i>
+                </li>
+                <li>
+                  <div>
+                    <i class="far fa-image"></i><span>Wedding Video</span>
+                  </div>
+                  <span class="date">April 10, 2023</span> <span>$200</span
+                  ><i class="fas fa-ellipsis-vertical"></i>
+                </li>
+                <li>
+                  <div>
+                    <i class="far fa-image"></i><span>Wedding Video</span>
+                  </div>
+                  <span class="date">April 10, 2023</span> <span>$200</span
+                  ><i class="fas fa-ellipsis-vertical"></i>
+                </li>
+                <li>
+                  <div>
+                    <i class="far fa-image"></i><span>Wedding Video</span>
+                  </div>
+                  <span class="date">April 10, 2023</span> <span>$200</span
+                  ><i class="fas fa-ellipsis-vertical"></i>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="chart-head">
+              <div>
+                <button id="expenses">Expenses</button>
+                <button id="income">Income</button>
+              </div>
+              <div>
+                <span>D</span><span>M</span><span>W</span
+                ><span class="active">All</span>
+              </div>
+            </div>
+            <canvas id="myChart" width="100%" height="70"></canvas>
+            <h2>History</h2>
+            <ul class="history">
+              <li>
+                <div class="inner">
+                  <i class="far fa-image"></i>
+                  <div>
+                    <span>Wedding Video</span
+                    ><span class="history-date">April 10, 2023</span>
+                  </div>
+                </div>
+                <span>$200</span>
+              </li>
+              <li>
+                <div class="inner">
+                  <i class="far fa-image"></i>
+                  <div>
+                    <span>Wedding Video</span
+                    ><span class="history-date">April 10, 2023</span>
+                  </div>
+                </div>
+                <span>$200</span>
+              </li>
+              <li>
+                <div class="inner">
+                  <i class="far fa-image"></i>
+                  <div>
+                    <span>Wedding Video</span
+                    ><span class="history-date">April 10, 2023</span>
+                  </div>
+                </div>
+                <span>$200</span>
+              </li>
+              <li>
+                <div class="inner">
+                  <i class="far fa-image"></i>
+                  <div>
+                    <span>Wedding Video</span
+                    ><span class="history-date">April 10, 2023</span>
+                  </div>
+                </div>
+                <span>$200</span>
+              </li>
+              <li>
+                <div class="inner">
+                  <i class="far fa-image"></i>
+                  <div>
+                    <span>Wedding Video</span
+                    ><span class="history-date">April 10, 2023</span>
+                  </div>
+                </div>
+                <span>$200</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Get the canvas element
+      var ctx = document.getElementById("myChart").getContext("2d");
+
+      // Define your data
+      var data = {
+        labels: ["January", "February", "March", "April", "May"],
+        datasets: [
+          {
+            label: "Monthly Expenses",
+            data: [1000, 1200, 800, 1500, 2000],
+            borderColor: "rgb(218, 192, 163)", // Line color
+            borderWidth: 2, // Line width
+            fill: false, // Don't fill the area under the line
+            tension: 0.4,
+          },
+        ],
+      };
+
+      // Create the chart
+      var myChart = new Chart(ctx, {
+        type: "line", // Line chart
+        data: data,
+        options: {
+          scales: {
+            x: {
+              grid: {
+                display: false, // Remove x-axis gridlines
+              },
+            },
+            y: {
+              grid: {
+                display: false, // Remove y-axis gridlines
+              },
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

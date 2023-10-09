@@ -8,11 +8,50 @@ const contentType = require("./contentType.js");
 const server = http.createServer((req, res) => {
   const { pathname, query } = url.parse(req.url, true);
   console.log(pathname);
-  const filePath = path.join(__dirname, "public", "index.html");
   if (pathname !== "/") {
     contentType.serveType(pathname, res);
   }
   if (pathname == "/") {
+    const filePath = path.join(__dirname, "public", "index.html");
+    fs.readFile(filePath, "utf-8", (err, data) => {
+      if (err) {
+        console.log(err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Internal server error!" }));
+      } else {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.end(data);
+      }
+    });
+  }
+  if (pathname == "/loginform") {
+    const filePath = path.join(__dirname, "public", "login.html");
+    fs.readFile(filePath, "utf-8", (err, data) => {
+      if (err) {
+        console.log(err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Internal server error!" }));
+      } else {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.end(data);
+      }
+    });
+  }
+  if (pathname == "/signupform") {
+    const filePath = path.join(__dirname, "public", "signup.html");
+    fs.readFile(filePath, "utf-8", (err, data) => {
+      if (err) {
+        console.log(err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Internal server error!" }));
+      } else {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.end(data);
+      }
+    });
+  }
+  if (pathname == "/homepage") {
+    const filePath = path.join(__dirname, "private", "main.html");
     fs.readFile(filePath, "utf-8", (err, data) => {
       if (err) {
         console.log(err);
