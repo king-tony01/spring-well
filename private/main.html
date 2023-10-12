@@ -11,7 +11,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <!--<link rel="stylesheet" href="/fontawesome-free-6.3.0-web/css/all.css" /> -->
+    <!--<link rel="stylesheet" href="/fontawesome-free-6.3.0-web/css/all.css" />-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Springwell Trust | Dashboard</title>
   </head>
@@ -38,19 +38,10 @@
           <button><i class="fas fa-envelope-open"></i>Message</button>
         </li>
         <li>
-          <button><i class="fas fa-heart"></i>Favorite</button>
-        </li>
-        <li>
           <button><i class="fas fa-user"></i>Profile</button>
         </li>
       </ul>
       <ul class="bottom-nav">
-        <li>
-          <button><i class="fas fa-circle-question"></i>Message</button>
-        </li>
-        <li>
-          <button><i class="fas fa-gear"></i>Favorite</button>
-        </li>
         <li>
           <button><i class="fas fa-sign-out"></i>Log out</button>
         </li>
@@ -75,7 +66,7 @@
       </section>
       <br />
       <section class="page">
-        <div class="wrapper">
+        <div style="padding-right: 20px" class="wallet">
           <div>
             <div class="cards-container">
               <div class="cards-head">
@@ -101,123 +92,89 @@
                 </div>
               </div>
             </div>
-            <div class="transactions">
-              <div class="transactions-head">
-                <h3>Transactions</h3>
-                <select>
-                  <option value="Month">Month</option>
-                  <option value="Week">Week</option>
-                </select>
-              </div>
-              <ul class="transactions-list">
-                <li>
-                  <div>
-                    <i class="far fa-image"></i><span>Wedding Video</span>
-                  </div>
-                  <span class="date">April 10, 2023</span> <span>$200</span
-                  ><i class="fas fa-ellipsis-vertical"></i>
-                </li>
-                <li>
-                  <div>
-                    <i class="far fa-image"></i><span>Wedding Video</span>
-                  </div>
-                  <span class="date">April 10, 2023</span> <span>$200</span
-                  ><i class="fas fa-ellipsis-vertical"></i>
-                </li>
-                <li>
-                  <div>
-                    <i class="far fa-image"></i><span>Wedding Video</span>
-                  </div>
-                  <span class="date">April 10, 2023</span> <span>$200</span
-                  ><i class="fas fa-ellipsis-vertical"></i>
-                </li>
-                <li>
-                  <div>
-                    <i class="far fa-image"></i><span>Wedding Video</span>
-                  </div>
-                  <span class="date">April 10, 2023</span> <span>$200</span
-                  ><i class="fas fa-ellipsis-vertical"></i>
-                </li>
-                <li>
-                  <div>
-                    <i class="far fa-image"></i><span>Wedding Video</span>
-                  </div>
-                  <span class="date">April 10, 2023</span> <span>$200</span
-                  ><i class="fas fa-ellipsis-vertical"></i>
-                </li>
-              </ul>
+            <div class="wallet-action">
+              <button id="sendmoney">
+                <i class="fas fa-arrow-up"></i> Send</button
+              ><button id="recievemoney">
+                <i class="fas fa-arrow-down"></i> Request
+              </button>
             </div>
           </div>
-          <div>
-            <div class="chart-head">
-              <div>
-                <button id="expenses">Expenses</button>
-                <button id="income">Income</button>
-              </div>
-              <div>
-                <span>D</span><span>M</span><span>W</span
-                ><span class="active">All</span>
-              </div>
+
+          <div class="transactions">
+            <div class="transactions-head">
+              <h3>Transactions</h3>
+              <select>
+                <option value="Month">Month</option>
+                <option value="Week">Week</option>
+              </select>
             </div>
-            <canvas id="myChart" width="100%" height="70"></canvas>
-            <h2>History</h2>
-            <ul class="history">
+            <ul class="transactions-list">
               <li>
-                <div class="inner">
-                  <i class="far fa-image"></i>
-                  <div>
-                    <span>Wedding Video</span
-                    ><span class="history-date">April 10, 2023</span>
-                  </div>
+                <div>
+                  <i class="far fa-image"></i><span>Wedding Video</span>
                 </div>
-                <span>$200</span>
+                <span class="date">April 10, 2023</span> <span>$200</span
+                ><i class="fas fa-ellipsis-vertical"></i>
               </li>
               <li>
-                <div class="inner">
-                  <i class="far fa-image"></i>
-                  <div>
-                    <span>Wedding Video</span
-                    ><span class="history-date">April 10, 2023</span>
-                  </div>
+                <div>
+                  <i class="far fa-image"></i><span>Wedding Video</span>
                 </div>
-                <span>$200</span>
+                <span class="date">April 10, 2023</span> <span>$200</span
+                ><i class="fas fa-ellipsis-vertical"></i>
               </li>
               <li>
-                <div class="inner">
-                  <i class="far fa-image"></i>
-                  <div>
-                    <span>Wedding Video</span
-                    ><span class="history-date">April 10, 2023</span>
-                  </div>
+                <div>
+                  <i class="far fa-image"></i><span>Wedding Video</span>
                 </div>
-                <span>$200</span>
+                <span class="date">April 10, 2023</span> <span>$200</span
+                ><i class="fas fa-ellipsis-vertical"></i>
               </li>
               <li>
-                <div class="inner">
-                  <i class="far fa-image"></i>
-                  <div>
-                    <span>Wedding Video</span
-                    ><span class="history-date">April 10, 2023</span>
-                  </div>
+                <div>
+                  <i class="far fa-image"></i><span>Wedding Video</span>
                 </div>
-                <span>$200</span>
+                <span class="date">April 10, 2023</span> <span>$200</span
+                ><i class="fas fa-ellipsis-vertical"></i>
               </li>
               <li>
-                <div class="inner">
-                  <i class="far fa-image"></i>
-                  <div>
-                    <span>Wedding Video</span
-                    ><span class="history-date">April 10, 2023</span>
-                  </div>
+                <div>
+                  <i class="far fa-image"></i><span>Wedding Video</span>
                 </div>
-                <span>$200</span>
+                <span class="date">April 10, 2023</span> <span>$200</span
+                ><i class="fas fa-ellipsis-vertical"></i>
               </li>
             </ul>
           </div>
         </div>
       </section>
     </main>
-
+    <!--Modals-->
+    <section class="send-modal">
+      <div class="send-con">
+        <p>Enter account number</p>
+        <input type="text" name="accountnumber" id="accountnumber" />
+        <div class="amount">
+          <p>Enter amount</p>
+          <input
+            type="text"
+            name="amount"
+            id="amount"
+            placeholder="$ 1 - 100,000"
+          />
+        </div>
+        <div class="inputs">
+          <button>1</button><button>2</button><button>3</button
+          ><button>4</button><button>5</button><button>6</button
+          ><button>7</button><button>8</button><button>9</button
+          ><button>.</button><button>0</button
+          ><button><i class="fas fa-delete-left"></i></button>
+        </div>
+        <button id="finalSend">Send</button>
+      </div>
+    </section>
+    <!--End of modals-->
     <script>
       // Get the canvas element
       var ctx = document.getElementById("myChart").getContext("2d");
