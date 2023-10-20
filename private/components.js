@@ -211,4 +211,61 @@ const uis = [
           </ul>
         </div>`,
   },
+  {
+    id: "amountInput",
+    data: `<section class="send-modal">
+      <div class="send-con">
+        <div class="amount">
+          <p>Bank name</p>
+          <input
+            type="text"
+            name="bankname"
+            id="bankname"
+            placeholder="ABC Bank"
+          />
+        </div>
+        <div>
+          <p>Account number</p>
+          <input type="text" name="accountnumber" id="accountnumber" />
+        </div>
+        <div class="amount">
+          <p>Enter amount</p>
+          <input
+            type="text"
+            name="amount"
+            id="amount"
+            placeholder="$ 1 - 100,000"
+          />
+        </div>
+        <div class="inputs">
+          <button>1</button><button>2</button><button>3</button
+          ><button>4</button><button>5</button><button>6</button
+          ><button>7</button><button>8</button><button>9</button
+          ><button>.</button><button>0</button
+          ><button><i class="fas fa-delete-left"></i></button>
+        </div>
+        <button id="finalSend">Send</button>
+      </div>
+    </section>`,
+  },
+  {
+    id: "successmessage",
+    data: `<section class="sucess-modal">
+      <div class="success-con">
+        <div class="suc-head">
+          <i class="far fa-circle-check"></i>
+          <h3>Transaction Successful!</h3>
+        </div>
+        <div>
+          <p>Your transaction has been processed successfully.</p>
+          <br />
+          <b class="trans-amount">Amount: [Amount]</b>
+          <b class="trans-id">Transaction ID: [Transaction ID]</b>
+          <b class="trans-date">Date: [Date]</b>
+          <br />
+          <p>Thank you for choosing our services!</p>
+        </div>
+      </div>
+    </section>`,
+  },
 ];
