@@ -272,6 +272,16 @@
             grid-template-columns: 1fr 1fr;
             background: var(--lighter);
         }
+
+        .get-in-touch ul li{
+            list-style: none;
+            margin: 5px 0;
+        }
+
+        .get-in-touch a{
+            color: var(--primary);
+            text-decoration: none;
+        }
     
         .get-in-touch>div {
             padding: 50px;
@@ -715,6 +725,16 @@
     
         .get-in-touch>div {
             padding: 15px;
+        }
+
+        .get-in-touch ul li{
+            list-style: none;
+            margin: 5px 0;
+        }
+
+        .get-in-touch a{
+            color: var(--primary);
+            text-decoration: none;
         }
     
     

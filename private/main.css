@@ -534,7 +534,7 @@
     
         nav ul li button i {
             display: inline-block;
-            margin-right: 3px;
+            font-size: 20px;
         }
 
         main{
@@ -604,6 +604,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-top: 20px;
         }
     
         .cards-head button {
