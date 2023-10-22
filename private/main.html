@@ -12,41 +12,83 @@
       referrerpolicy="no-referrer"
     />
     <!--<link rel="stylesheet" href="/fontawesome-free-6.3.0-web/css/all.css" />-->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+      var Tawk_API = Tawk_API || {},
+        Tawk_LoadStart = new Date();
+      (function () {
+        var s1 = document.createElement("script"),
+          s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = "https://embed.tawk.to/653508c0a84dd54dc483cf0f/1hdbikd4p";
+        s1.charset = "UTF-8";
+        s1.setAttribute("crossorigin", "*");
+        s0.parentNode.insertBefore(s1, s0);
+      })();
+    </script>
+    <!--End of Tawk.to Script-->
     <title>Springwell Trust | Dashboard</title>
   </head>
   <body>
     <nav>
       <h1>Springwell Trust</h1>
-      <br /><br />
-      <ul>
+      <br class="break" /><br class="break" />
+      <ul class="nav-con nav">
         <li>
-          <button class="active">
+          <button data-id="dashboard">
             <i class="fas fa-dashboard"></i>Dashboard
           </button>
         </li>
         <li>
-          <button><i class="fas fa-arrow-trend-up"></i>Statistics</button>
+          <button data-id="statistics">
+            <i class="fas fa-arrow-trend-up"></i>Statistics
+          </button>
         </li>
         <li>
-          <button><i class="fas fa-wallet"></i>Wallet</button>
+          <button data-id="wallet"><i class="fas fa-wallet"></i>Wallet</button>
         </li>
         <li>
-          <button><i class="fas fa-envelope-open"></i>Message</button>
+          <button data-id="message">
+            <i class="fas fa-envelope-open"></i>Message
+          </button>
         </li>
         <li>
-          <button><i class="fas fa-user"></i>Profile</button>
+          <button data-id="profile"><i class="fas fa-user"></i>Profile</button>
+        </li>
+      </ul>
+      <ul class="nav-con nav-hidden">
+        <li>
+          <button>
+            <i class="fas fa-dashboard" data-id="dashboard"></i>
+          </button>
+        </li>
+        <li>
+          <button>
+            <i class="fas fa-arrow-trend-up" data-id="statistics"></i>
+          </button>
+        </li>
+        <li>
+          <button><i class="fas fa-wallet" data-id="wallet"></i></button>
+        </li>
+        <li>
+          <button>
+            <i class="fas fa-envelope-open" data-id="message"></i>
+          </button>
+        </li>
+        <li>
+          <button><i class="fas fa-user" data-id="profile"></i></button>
         </li>
       </ul>
       <ul class="bottom-nav">
-        <li>
+        <li data-id="logout">
           <button><i class="fas fa-sign-out"></i>Log out</button>
         </li>
       </ul>
     </nav>
     <main>
       <section class="header">
-        <h1 class="greet">Hello, King 👋</h1>
+        <h1 class="greet">Hello, {{name}} 👋</h1>
         <div class="wrap">
           <div class="search">
             <i class="fas fa-search"></i>
@@ -62,133 +104,72 @@
         </div>
       </section>
       <br />
-      <section class="page">
-        <div style="padding-right: 20px" class="wallet">
-          <div>
-            <div class="cards-container">
-              <div class="cards-head">
-                <h3>My Cards</h3>
-                <button>Add New</button>
-              </div>
-              <div class="cards-con-main">
-                <div class="atm">
-                  <img src="/images/visa.png" alt="" />
-                  <b class="balance">$ 5,000</b>
-                  <b class="card-number"
-                    ><span>1230</span><span>4670</span><span>6630</span></b
-                  >
-                  <span class="card-name">Okolie Amuche A.</span>
-                </div>
-                <div class="atm">
-                  <img src="/images/master.png" alt="" />
-                  <b class="balance">$ 200,000</b>
-                  <b class="card-number"
-                    ><span>1230</span><span>4670</span><span>6630</span></b
-                  >
-                  <span class="card-name">Okolie Amuche A.</span>
-                </div>
-              </div>
-            </div>
-            <div class="wallet-action">
-              <button id="sendmoney">
-                <i class="fas fa-arrow-up"></i> Send</button
-              ><button id="recievemoney">
-                <i class="fas fa-arrow-down"></i> Request
-              </button>
-            </div>
-          </div>
-
-          <div class="transactions">
-            <div class="transactions-head">
-              <h3>Transactions</h3>
-              <select>
-                <option value="Month">Month</option>
-                <option value="Week">Week</option>
-              </select>
-            </div>
-            <ul class="transactions-list">
-              <li>
-                <div>
-                  <i class="far fa-image"></i><span>Wedding Video</span>
-                </div>
-                <span class="date">April 10, 2023</span> <span>$200</span
-                ><i class="fas fa-ellipsis-vertical"></i>
-              </li>
-              <li>
-                <div>
-                  <i class="far fa-image"></i><span>Wedding Video</span>
-                </div>
-                <span class="date">April 10, 2023</span> <span>$200</span
-                ><i class="fas fa-ellipsis-vertical"></i>
-              </li>
-              <li>
-                <div>
-                  <i class="far fa-image"></i><span>Wedding Video</span>
-                </div>
-                <span class="date">April 10, 2023</span> <span>$200</span
-                ><i class="fas fa-ellipsis-vertical"></i>
-              </li>
-              <li>
-                <div>
-                  <i class="far fa-image"></i><span>Wedding Video</span>
-                </div>
-                <span class="date">April 10, 2023</span> <span>$200</span
-                ><i class="fas fa-ellipsis-vertical"></i>
-              </li>
-              <li>
-                <div>
-                  <i class="far fa-image"></i><span>Wedding Video</span>
-                </div>
-                <span class="date">April 10, 2023</span> <span>$200</span
-                ><i class="fas fa-ellipsis-vertical"></i>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <section class="page"></section>
     </main>
     <!--Modals-->
+    <section class="send-modal">
+      <div class="send-con">
+        <i class="fas fa-close"></i>
+        <div class="amount">
+          <p>Bank name</p>
+          <input
+            type="text"
+            name="bankname"
+            id="bankname"
+            placeholder="ABC Bank"
+          />
+        </div>
+        <div>
+          <p>Account number</p>
+          <input
+            type="text"
+            name="accountnumber"
+            id="accountnumber"
+            placeholder="0123456789"
+          />
+        </div>
+        <div class="amount">
+          <p>Enter amount</p>
+          <input
+            type="text"
+            name="amount"
+            id="amount"
+            placeholder="$ 1 - 100,000"
+          />
+        </div>
+        <div class="amount">
+          <p>Description</p>
+          <input type="text" name="desc" id="desc" placeholder="Why sending" />
+        </div>
+        <div class="inputs">
+          <button>1</button><button>2</button><button>3</button
+          ><button>4</button><button>5</button><button>6</button
+          ><button>7</button><button>8</button><button>9</button
+          ><button>.</button><button>0</button
+          ><button><i class="fas fa-delete-left"></i></button>
+        </div>
+        <button id="finalSend">Send</button>
+      </div>
+    </section>
+    <section class="sucess-modal">
+      <div class="success-con">
+        <div class="suc-head">
+          <i class="far fa-circle-check"></i>
+          <h3>Transaction Successful!</h3>
+        </div>
+        <div>
+          <p>Your transaction has been processed successfully.</p>
+          <br />
+          <b class="trans-amount"></b>
+          <b class="trans-id"></b>
+          <b class="trans-date"></b>
+          <br />
+          <p>Thank you for choosing our services!</p>
+        </div>
+      </div>
+    </section>
 
     <!--End of modals-->
-    <script>
-      // Get the canvas element
-      var ctx = document.getElementById("myChart").getContext("2d");
-
-      // Define your data
-      var data = {
-        labels: ["January", "February", "March", "April", "May"],
-        datasets: [
-          {
-            label: "Monthly Expenses",
-            data: [1000, 1200, 800, 1500, 2000],
-            borderColor: "rgb(218, 192, 163)", // Line color
-            borderWidth: 2, // Line width
-            fill: false, // Don't fill the area under the line
-            tension: 0.4,
-          },
-        ],
-      };
-
-      // Create the chart
-      var myChart = new Chart(ctx, {
-        type: "line", // Line chart
-        data: data,
-        options: {
-          scales: {
-            x: {
-              grid: {
-                display: false, // Remove x-axis gridlines
-              },
-            },
-            y: {
-              grid: {
-                display: false, // Remove y-axis gridlines
-              },
-              beginAtZero: true,
-            },
-          },
-        },
-      });
-    </script>
+    <script type="module" src="/private/main.js"></script>
   </body>
 </html>
