@@ -62,6 +62,7 @@ function handleFile(file) {
 
 sendBtn.addEventListener("click", async (e) => {
   e.preventDefault();
+  sendBtn.textContent = "Signing up...";
   const form = new FormData(document.querySelector("form"));
   const response = await fetch(`${location.origin}/newuser`, {
     method: "POST",

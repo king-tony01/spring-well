@@ -57,6 +57,7 @@
       const btn = document.getElementById("submit");
       btn.addEventListener("click", async (e) => {
         e.preventDefault();
+        btn.textContent = "Loging in...";
         const form = new FormData(document.querySelector("form"));
         const details = {
           id_no: form.get("id"),
