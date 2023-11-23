@@ -9,9 +9,19 @@ init();
 //USER INITIATING
 let mainUser = {};
 async function init() {
-  const response = await fetch(`${location.origin}/user`);
+  const response = await fetch(`${location.origin}/user`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: location.search.slice(3) }),
+  });
   const data = await response.json();
-  mainUser = data;
+  const user = data.data;
+  mainUser = user;
+  document.getElementById("userpic").src = user.profile;
+  document.querySelector(".greet").textContent = `Hello, ${user.fullName} 👋`;
+  const transactions = await getTransactions();
   page.innerHTML = `<div class="wrapper">
           <div>
             <div class="cards-container">
@@ -26,9 +36,9 @@ async function init() {
                     "US"
                   )}</b>
                   <b class="card-number"
-                    ><span>1230</span><span>4670</span><span>6630</span></b
+                    >${mainUser.card}</b
                   >
-                  <span class="card-name">${mainUser.userName}</span>
+                  <span class="card-name">${mainUser.fullName}</span>
                 </div>
               </div>
             </div>
@@ -41,16 +51,22 @@ async function init() {
                 </select>
               </div>
               <ul class="transactions-list">
-              ${mainUser.transactions.map((trans) => {
-                return `<li>
-                  <div>
-                    <i class="fas fa-wallet"></i><span>${trans.desc}</span>
+              ${
+                transactions.length > 0
+                  ? transactions.map((transaction) => {
+                      return `<li>
+                <div>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
                   </div>
-                  <span class="date">${trans.date}</span> <span>$${trans.amount}</span
+                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
-                </li>`;
-              })}
-                
+                </li>
+                `;
+                    })
+                  : `<div>
+                    <i class="fas fa-history"></i><span> No transactions yet</span>
+                  </div>`
+              }
               </ul>
             </div>
           </div>
@@ -67,25 +83,31 @@ async function init() {
             </div>
             <canvas id="myChart" ></canvas>
             <h2>History</h2>
-            <ul class="history">
-              <li>
-   ${mainUser.transactions.map((trans) => {
-     return `<li>
-                  <div>
-                    <i class="fas fa-wallet"></i><span>${trans.desc}</span>
+            <ul class="history">             ${
+              transactions.length > 0
+                ? transactions.map((transaction) => {
+                    return `<li>
+                <div>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
                   </div>
-                  <span class="date">${trans.date}</span> <span>$${trans.amount}</span
+                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
-                </li>`;
-   })}
+                </li>
+                `;
+                  })
+                : `<div>
+                    <i class="fas fa-history"></i><span> No transactions yet</span>
+                  </div>`
+            }
             </ul>
           </div>
         </div>`;
-  chart();
+  await chart();
 }
 navigation.forEach((con) => {
-  con.addEventListener("click", (e) => {
+  con.addEventListener("click", async (e) => {
     const tab = e.target.getAttribute("data-id");
+    const transactions = await getTransactions();
     switch (tab) {
       case "dashboard":
         page.innerHTML = `<div class="wrapper">
@@ -102,9 +124,9 @@ navigation.forEach((con) => {
                     "US"
                   )}</b>
                   <b class="card-number"
-                    ><span>1230</span><span>4670</span><span>6630</span></b
+                    >${mainUser.card}</b
                   >
-                  <span class="card-name">${mainUser.userName}</span>
+                  <span class="card-name">${mainUser.fullName}</span>
                 </div>
               </div>
             </div>
@@ -117,16 +139,22 @@ navigation.forEach((con) => {
                 </select>
               </div>
               <ul class="transactions-list">
-              ${mainUser.transactions.map((trans) => {
-                return `<li>
-                  <div>
-                    <i class="fas fa-wallet"></i><span>${trans.desc}</span>
+                         ${
+                           transactions.length > 0
+                             ? transactions.map((transaction) => {
+                                 return `<li>
+                <div>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
                   </div>
-                  <span class="date">${trans.date}</span> <span>$${trans.amount}</span
+                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
-                </li>`;
-              })}
-                
+                </li>
+                `;
+                               })
+                             : `<div>
+                    <i class="fas fa-history"></i><span> No transactions yet</span>
+                  </div>`
+                         }
               </ul>
             </div>
           </div>
@@ -144,20 +172,26 @@ navigation.forEach((con) => {
             <canvas id="myChart"></canvas>
             <h2>History</h2>
             <ul class="history">
-              <li>
-   ${mainUser.transactions.map((trans) => {
-     return `<li>
-                  <div>
-                    <i class="fas fa-wallet"></i><span>${trans.desc}</span>
+                         ${
+                           transactions.length > 0
+                             ? transactions.map((transaction) => {
+                                 return `<li>
+                <div>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
                   </div>
-                  <span class="date">${trans.date}</span> <span>$${trans.amount}</span
+                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
-                </li>`;
-   })}
+                </li>
+                `;
+                               })
+                             : `<div>
+                    <i class="fas fa-history"></i><span> No transactions yet</span>
+                  </div>`
+                         }
             </ul>
           </div>
         </div>`;
-        chart();
+        await chart();
         break;
       case "statistics":
         page.innerHTML = `<div>
@@ -174,18 +208,25 @@ navigation.forEach((con) => {
           <canvas id="myChart" ></canvas>
           <h2>History</h2>
           <ul class="history">
-${mainUser.transactions.map((trans) => {
-  return `<li>
-                  <div>
-                    <i class="fas fa-wallet"></i><span>${trans.desc}</span>
+             ${
+               transactions.length > 0
+                 ? transactions.map((transaction) => {
+                     return `<li>
+                <div>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
                   </div>
-                  <span class="date">${trans.date}</span> <span>$${trans.amount}</span
+                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
-                </li>`;
-})}
-          </ul>
+                </li>
+                `;
+                   })
+                 : `<div>
+                    <i class="fas fa-history"></i><span> No transactions yet</span>
+                  </div>`
+             }
+               </ul>
         </div>`;
-        chart();
+        await chart();
         break;
       case "wallet":
         page.innerHTML = `        <div style="padding-right: 20px" class="wallet">
@@ -203,9 +244,9 @@ ${mainUser.transactions.map((trans) => {
                     "US"
                   )}</span></b>
                   <b class="card-number"
-                    ><span>1230</span><span>4670</span><span>6630</span></b
+                    >${mainUser.card}</b
                   >
-                  <span class="card-name">${mainUser.userName}</span>
+                  <span class="card-name">${mainUser.fullName}</span>
                 </div>
               </div>
             </div>
@@ -227,15 +268,22 @@ ${mainUser.transactions.map((trans) => {
               </select>
             </div>
             <ul class="transactions-list" style="max-height: 100%;">
- ${mainUser.transactions.map((trans) => {
-   return `<li>
-                  <div>
-                    <i class="fas fa-wallet"></i><span>${trans.desc}</span>
+              ${
+                transactions.length > 0
+                  ? transactions.map((transaction) => {
+                      return `<li>
+                <div>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
                   </div>
-                  <span class="date">${trans.date}</span> <span>$${trans.amount}</span
+                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
-                </li>`;
- })}
+                </li>
+                `;
+                    })
+                  : `<div>
+                    <i class="fas fa-history"></i><span> No transactions yet</span>
+                  </div>`
+              }
             </ul>
           </div>
         </div>`;
@@ -275,6 +323,7 @@ finalSend.addEventListener("click", async () => {
       date: `${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`,
       desc: `${document.getElementById("desc").value}`,
       transId: `Transaction ID: ${Date.now() * Math.floor(Math.random() * 10)}`,
+      userId: location.search.slice(3),
     }),
   });
   const data = await response.json();
@@ -300,12 +349,12 @@ closeModal.addEventListener("click", () => {
   sendModal.classList.remove("active");
 });
 
-function chart() {
+async function chart() {
   let months = [];
   const currentDate = new Date();
   for (let i = 0; i <= currentDate.getMonth(); i++) {
     const date = new Date(0, i); // The second argument is the month (0-11)
-    const monthName = date.toLocaleString("en-US", { month: "long" });
+    const monthName = date.toLocaleString("en-US", { month: "short" });
     months.push(monthName);
   }
 
@@ -313,12 +362,13 @@ function chart() {
   var ctx = document.getElementById("myChart").getContext("2d");
 
   // Define your data
+  const transactions = await getTransactions();
   var data = {
     labels: months,
     datasets: [
       {
         label: "Monthly Expenses",
-        data: mainUser.transactions.map((trans) => {
+        data: transactions.map((trans) => {
           return trans.amount;
         }),
         borderColor: "rgb(218, 192, 163)", // Line color
@@ -349,4 +399,17 @@ function chart() {
       },
     },
   });
+}
+
+async function getTransactions() {
+  const response = await fetch(`${location.origin}/transactions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: location.search.slice(3) }),
+  });
+
+  const data = await response.json();
+  return data;
 }

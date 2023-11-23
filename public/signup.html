@@ -31,31 +31,53 @@
   </head>
   <body>
     <div class="image"><img src="/images/image-04.jpg" alt="" /></div>
-    <form action="">
+    <form action="" enctype="multipart/form-data">
       <h2>Sign Up</h2>
       <p>Welcome, enter your credentials to get started.</p>
-      <div class="input-field">
-        <i class="fas fa-user"></i
-        ><input
-          type="text"
-          name="firstname"
-          id="firstname"
-          placeholder="First name"
-        />
+      <div class="divider">
+        <div class="input-field">
+          <i class="fas fa-user"></i
+          ><input
+            type="text"
+            name="fullName"
+            id="fullName"
+            placeholder="Full name"
+          />
+        </div>
+        <div class="input-field">
+          <i class="fas fa-passport"></i
+          ><input
+            type="number"
+            name="idNumber"
+            id="idNumber"
+            placeholder="ID Number"
+          />
+        </div>
       </div>
-      <div class="input-field">
-        <i class="fas fa-user"></i
-        ><input
-          type="text"
-          name="lastname"
-          id="lastname"
-          placeholder="Last name"
-        />
+      <input type="file" name="imageInput" id="imageInput" />
+      <div class="image-field" id="dropContainer">
+        <i class="fas fa-image"></i>
+        <small>
+          Drag and drop your image ID here or
+          <span class="click">click to upload</span>
+        </small>
       </div>
-      <div class="input-field">
-        <i class="fas fa-envelope"></i
-        ><input type="email" name="email" id="email" placeholder="Email" />
+      <div class="divider">
+        <div class="input-field">
+          <i class="fas fa-envelope"></i
+          ><input type="email" name="email" id="email" placeholder="Email" />
+        </div>
+        <div class="input-field">
+          <i class="fas fa-location"></i
+          ><input
+            type="text"
+            name="address"
+            id="address"
+            placeholder="Residential Address"
+          />
+        </div>
       </div>
+
       <div class="input-field">
         <i class="fas fa-lock"></i
         ><input
@@ -76,5 +98,6 @@
       <br />
       <button type="submit" id="submit">Sign Up</button>
     </form>
+    <script src="/public/handler.js"></script>
   </body>
 </html>

@@ -37,7 +37,7 @@
 
       <div class="input-field">
         <i class="fas fa-user"></i
-        ><input type="email" name="email" id="email" placeholder="ID" />
+        ><input type="number" name="id" id="id" placeholder="ID" />
       </div>
       <div class="input-field">
         <i class="fas fa-lock"></i
@@ -59,7 +59,7 @@
         e.preventDefault();
         const form = new FormData(document.querySelector("form"));
         const details = {
-          email: form.get("email"),
+          id_no: form.get("id"),
           password: form.get("password"),
         };
 
@@ -71,10 +71,9 @@
           body: JSON.stringify(details),
         });
         const data = await response.json();
-        alert(data.message);
         console.log(data);
         if (data.stat) {
-          location.assign(`${location.origin}/homepage`);
+          location.assign(`${location.origin}/homepage?u=${data.data.id}`);
         }
       });
 
