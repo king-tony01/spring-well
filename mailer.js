@@ -92,11 +92,12 @@ async function deliverMail(user) {
   </head>
   <body>
     <header>
-      <b>Coinsage</b>
+      <b>SpringwellTrust</b>
     </header>
     <div class="hero">
-      <h3>Welcome to Coinsage</h3>
-      <p>We are the BEST in INVESTMENT.</p>
+      <h3>Welcome to SpringwellTrust</h3>
+      <p>Stay updated with financial insights. Stay updated with financial
+            insights.</p>
     </div>
     <div class="wrapper">
       <p>
@@ -107,11 +108,11 @@ async function deliverMail(user) {
       <strong>Full name: ${user.fullName}</strong>
       <strong>Password: ${user.password}</strong>
       <strong>Email: ${user.email}</strong>
-      <a href="http://localhost:4300/loginform">Click here to login</a>
+      <a href="https://www.springwelltrust.org/loginform">Click here to login</a>
       <p>
         Once again, thank you for embarking on this financial journey with us.
       </p>
-      <b>The Coinsage Team.</b>
+      <b>The SpringwellTrust Team.</b>
     </div>
     <footer>
       <small
@@ -119,8 +120,8 @@ async function deliverMail(user) {
         not borther replying to this email.</small
       >
       <small
-        >The Coinsage logo is a trademark of
-        <span>Coinsage Investment inc.</span> All rights reserved.</small
+        >The SpringwellTrust logo is a trademark of
+        <span>SpringwellTrust Banking Services inc.</span> All rights reserved.</small
       >
     </footer>
   </body>
