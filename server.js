@@ -1,12 +1,10 @@
 const http = require("http");
-const fs = require("fs");
-const fileMove = require("fs-extra");
 const PORT = process.env.PORT || 4300;
 const path = require("path");
 const url = require("url");
 const formidable = require("formidable");
 const contentType = require("./contentType.js");
-const users = require("./users.js");
+const fs = require("@cyclic.sh/s3fs");
 const { createUser, fetchUser, getTransaction } = require("./database.js");
 
 const server = http.createServer(async (req, res) => {
@@ -138,7 +136,7 @@ const server = http.createServer(async (req, res) => {
   }
   if (pathname == "/newuser") {
     const form = new formidable.IncomingForm();
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, async (err, fields, files) => {
       // Handle file data
       if (err) {
         console.log(err);
@@ -146,64 +144,32 @@ const server = http.createServer(async (req, res) => {
       const oldPath = files.imageInput[0].filepath;
       const fileName = files.imageInput[0].originalFilename;
       const newPath = `private/profiles/${fileName}`;
-      if (fs.existsSync(newPath)) {
-        fileMove.remove(newPath, (err) => {
-          if (err) {
-            console.log(err);
-          } else {
-            fileMove.move(oldPath, newPath, async (err) => {
-              try {
-                if (err) throw err;
-                const user = {
-                  id: generateCode(50),
-                  fullName: fields.fullName[0],
-                  email: fields.email[0],
-                  gov_id: Number(fields.idNumber[0]),
-                  address: fields.address[0],
-                  password: fields.password[0],
-                  id_no: Number(generateID(10)),
-                  card: generateCard(),
-                  profile_url: newPath,
-                };
-                console.log(user);
-                res.writeHead(200, {
-                  "Content-Type": "application/json",
-                });
-                res.end(JSON.stringify(await createUser(user)));
-              } catch (err) {
-                console.log(err);
-                res.writeHead(501, {
-                  "Content-Type": "application/json",
-                });
-                res.end(JSON.stringify(err));
-              }
-            });
-          }
+      const content = fs.readFileSync(fileName);
+      fs.writeFileSync(newPath, content);
+      try {
+        if (err) throw err;
+        const user = {
+          id: generateCode(50),
+          fullName: fields.fullName[0],
+          email: fields.email[0],
+          gov_id: Number(fields.idNumber[0]),
+          address: fields.address[0],
+          password: fields.password[0],
+          id_no: Number(generateID(10)),
+          card: generateCard(),
+          profile_url: newPath,
+        };
+        console.log(user);
+        res.writeHead(200, {
+          "Content-Type": "application/json",
         });
-      } else {
-        fileMove.move(oldPath, newPath, async (err) => {
-          try {
-            if (err) throw err;
-            const user = {
-              id: generateCode(50),
-              fullName: fields.fullName[0],
-              email: fields.email[0],
-              gov_id: Number(fields.idNumber[0]),
-              address: fields.address[0],
-              password: fields.password[0],
-              id_no: Number(generateID(10)),
-              card: generateCard(),
-              profile_url: newPath,
-            };
-            console.log(user);
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify(await createUser(user)));
-          } catch (err) {
-            console.log(err);
-            res.writeHead(501, { "Content-Type": "application/json" });
-            res.end(JSON.stringify(err));
-          }
+        res.end(JSON.stringify(await createUser(user)));
+      } catch (err) {
+        console.log(err);
+        res.writeHead(501, {
+          "Content-Type": "application/json",
         });
+        res.end(JSON.stringify(err));
       }
     });
   }
