@@ -1,5 +1,6 @@
 const http = require("http");
 const fs = require("fs");
+const fileMove = require("fs-extra");
 const PORT = process.env.PORT || 4300;
 const path = require("path");
 const url = require("url");
@@ -145,7 +146,7 @@ const server = http.createServer(async (req, res) => {
       const oldPath = files.imageInput[0].filepath;
       const fileName = files.imageInput[0].originalFilename;
       const newPath = `private/profiles/${fileName}`;
-      fs.rename(oldPath, newPath, async (err) => {
+      fileMove.move(oldPath, newPath, async (err) => {
         try {
           if (err) throw err;
           const user = {
