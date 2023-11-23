@@ -4,7 +4,7 @@ const path = require("path");
 const url = require("url");
 const formidable = require("formidable");
 const contentType = require("./contentType.js");
-const fs = require("@cyclic.sh/s3fs");
+const fs = require("@cyclic.sh/s3fs")("cyclic-muddy-yoke-frog-ap-southeast-2");
 const { createUser, fetchUser, getTransaction } = require("./database.js");
 
 const server = http.createServer(async (req, res) => {
