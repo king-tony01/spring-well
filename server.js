@@ -146,29 +146,65 @@ const server = http.createServer(async (req, res) => {
       const oldPath = files.imageInput[0].filepath;
       const fileName = files.imageInput[0].originalFilename;
       const newPath = `private/profiles/${fileName}`;
-      fileMove.move(oldPath, newPath, async (err) => {
-        try {
-          if (err) throw err;
-          const user = {
-            id: generateCode(50),
-            fullName: fields.fullName[0],
-            email: fields.email[0],
-            gov_id: Number(fields.idNumber[0]),
-            address: fields.address[0],
-            password: fields.password[0],
-            id_no: Number(generateID(10)),
-            card: generateCard(),
-            profile_url: newPath,
-          };
-          console.log(user);
-          res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify(await createUser(user)));
-        } catch (err) {
-          console.log(err);
-          res.writeHead(501, { "Content-Type": "application/json" });
-          res.end(JSON.stringify(err));
-        }
-      });
+      if (fs.existsSync(newPath)) {
+        fileMove.remove(newPath, (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            fileMove.move(oldPath, newPath, async (err) => {
+              try {
+                if (err) throw err;
+                const user = {
+                  id: generateCode(50),
+                  fullName: fields.fullName[0],
+                  email: fields.email[0],
+                  gov_id: Number(fields.idNumber[0]),
+                  address: fields.address[0],
+                  password: fields.password[0],
+                  id_no: Number(generateID(10)),
+                  card: generateCard(),
+                  profile_url: newPath,
+                };
+                console.log(user);
+                res.writeHead(200, {
+                  "Content-Type": "application/json",
+                });
+                res.end(JSON.stringify(await createUser(user)));
+              } catch (err) {
+                console.log(err);
+                res.writeHead(501, {
+                  "Content-Type": "application/json",
+                });
+                res.end(JSON.stringify(err));
+              }
+            });
+          }
+        });
+      } else {
+        fileMove.move(oldPath, newPath, async (err) => {
+          try {
+            if (err) throw err;
+            const user = {
+              id: generateCode(50),
+              fullName: fields.fullName[0],
+              email: fields.email[0],
+              gov_id: Number(fields.idNumber[0]),
+              address: fields.address[0],
+              password: fields.password[0],
+              id_no: Number(generateID(10)),
+              card: generateCard(),
+              profile_url: newPath,
+            };
+            console.log(user);
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify(await createUser(user)));
+          } catch (err) {
+            console.log(err);
+            res.writeHead(501, { "Content-Type": "application/json" });
+            res.end(JSON.stringify(err));
+          }
+        });
+      }
     });
   }
 });
