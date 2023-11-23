@@ -14,7 +14,7 @@ async function deliverMail(user) {
   const mail = {
     from: "kingtony3825@gmail.com",
     to: `${user.email}`,
-    subject: "Welcome to Coinsage",
+    subject: "Welcome to SpringwellTrust",
     html: `<!DOCTYPE html>
 <html lang="en">
   <head>

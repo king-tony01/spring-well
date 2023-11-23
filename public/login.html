@@ -74,6 +74,8 @@
         console.log(data);
         if (data.stat) {
           location.assign(`${location.origin}/homepage?u=${data.data.id}`);
+        } else {
+          alert(data.message);
         }
       });
 
