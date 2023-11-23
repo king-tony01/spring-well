@@ -4,7 +4,8 @@ const path = require("path");
 const url = require("url");
 const formidable = require("formidable");
 const contentType = require("./contentType.js");
-const fs = require("@cyclic.sh/s3fs")("cyclic-muddy-yoke-frog-ap-southeast-2");
+const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
 const { createUser, fetchUser, getTransaction } = require("./database.js");
 
 const server = http.createServer(async (req, res) => {
@@ -136,7 +137,7 @@ const server = http.createServer(async (req, res) => {
   }
   if (pathname == "/newuser") {
     const form = new formidable.IncomingForm();
-    form.parse(req, async (err, fields, files) => {
+    form.parse(req, (err, fields, files) => {
       // Handle file data
       if (err) {
         console.log(err);
@@ -144,33 +145,45 @@ const server = http.createServer(async (req, res) => {
       const oldPath = files.imageInput[0].filepath;
       const fileName = files.imageInput[0].originalFilename;
       const newPath = `private/profiles/${fileName}`;
-      const content = fs.readFileSync(fileName);
-      fs.writeFileSync(newPath, content);
-      try {
-        if (err) throw err;
-        const user = {
-          id: generateCode(50),
-          fullName: fields.fullName[0],
-          email: fields.email[0],
-          gov_id: Number(fields.idNumber[0]),
-          address: fields.address[0],
-          password: fields.password[0],
-          id_no: Number(generateID(10)),
-          card: generateCard(),
-          profile_url: newPath,
-        };
-        console.log(user);
-        res.writeHead(200, {
-          "Content-Type": "application/json",
-        });
-        res.end(JSON.stringify(await createUser(user)));
-      } catch (err) {
-        console.log(err);
-        res.writeHead(501, {
-          "Content-Type": "application/json",
-        });
-        res.end(JSON.stringify(err));
-      }
+      // Configure Cloudinary with your credentials
+      cloudinary.config({
+        cloud_name: "dmejjae45",
+        api_key: "744838253882611",
+        api_secret: "DRLqbCN8Es7Ni0XO3j5SmXh0pqU",
+      });
+
+      // Upload the image to Cloudinary
+      cloudinary.uploader.upload(oldPath, async (error, result) => {
+        if (error) {
+          console.error("Error uploading image:", error);
+        } else {
+          try {
+            if (err) throw err;
+            const user = {
+              id: generateCode(50),
+              fullName: fields.fullName[0],
+              email: fields.email[0],
+              gov_id: Number(fields.idNumber[0]),
+              address: fields.address[0],
+              password: fields.password[0],
+              id_no: Number(generateID(10)),
+              card: generateCard(),
+              profile_url: result.secure_url,
+            };
+            console.log(user);
+            res.writeHead(200, {
+              "Content-Type": "application/json",
+            });
+            res.end(JSON.stringify(await createUser(user)));
+          } catch (err) {
+            console.log(err);
+            res.writeHead(501, {
+              "Content-Type": "application/json",
+            });
+            res.end(JSON.stringify(err));
+          }
+        }
+      });
     });
   }
 });
