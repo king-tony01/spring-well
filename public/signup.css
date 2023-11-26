@@ -144,7 +144,7 @@ body {
             /* align-items: center; */
         }
     
-        body div img {
+        body .image img{
             display: none;
         }
     

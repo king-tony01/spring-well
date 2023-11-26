@@ -64,23 +64,32 @@ sendBtn.addEventListener("click", async (e) => {
   e.preventDefault();
   sendBtn.textContent = "Signing up...";
   const form = new FormData(document.querySelector("form"));
+  for (const [key, value] of form) {
+    console.log(key, ":", value);
+    if (value == "" || form.get("imageInput").name == "") {
+      alert("Please fill all details");
+      sendBtn.textContent = "Sign Up";
+      return;
+    }
+  }
   const response = await fetch(`${location.origin}/newuser`, {
     method: "POST",
     body: form,
   });
   const data = await response.json();
   if (data.stat) {
-    console.log(data);
+    alert(
+      `An email with login details has been sent to ${form.get(
+        "email"
+      )}, please check your inbox.`
+    );
     location.assign(`${location.origin}/loginform`);
   } else {
-    console.log(data);
     alert(data.message);
+    sendBtn.textContent = "Sign Up";
   }
 });
 
-document.querySelector(".click").addEventListener("click", () => {
-  document.getElementById("imageInput").click();
-});
 document.getElementById("dropContainer").addEventListener("click", () => {
   document.getElementById("imageInput").click();
 });
