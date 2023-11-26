@@ -462,6 +462,7 @@
     .hidden-nav a {
             text-decoration: none;
             color: var(--primary);
+            margin: 15px 0;
         }
 
     .hidden-nav .fas{
