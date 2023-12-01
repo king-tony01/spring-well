@@ -7,6 +7,7 @@ const contentType = require("./contentType.js");
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 const { createUser, fetchUser, getTransaction } = require("./database.js");
+const { message } = require("./mailer.js");
 
 const server = http.createServer(async (req, res) => {
   const { pathname, query } = url.parse(req.url, true);
@@ -184,6 +185,25 @@ const server = http.createServer(async (req, res) => {
           }
         }
       });
+    });
+  }
+
+  if (pathname == "/message") {
+    let body;
+    req.on("data", (chunk) => {
+      body = JSON.parse(chunk);
+    });
+
+    req.on("end", async () => {
+      try {
+        console.log(body);
+        message(body);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Message successfully sent!" }));
+      } catch (err) {
+        res.writeHead(501, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(err));
+      }
     });
   }
 });

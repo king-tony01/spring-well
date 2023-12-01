@@ -2,6 +2,7 @@ const sideNav = document.querySelector("nav");
 const menuBtn = document.querySelector(".fa-bars");
 const modal = document.querySelector(".modal");
 const links = document.querySelectorAll(".link");
+const sendMessage = document.getElementById("sendmessage");
 menuBtn.addEventListener("click", () => {
   sideNav.style.display = "block";
   modal.style.display = "block";
@@ -52,3 +53,23 @@ function hideMenu() {
   sideNav.style.display = "none";
   modal.style.display = "none";
 }
+
+sendMessage.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const form = new FormData(document.getElementById("form"));
+  const messageData = {
+    fullName: form.get("fullname"),
+    email: form.get("email"),
+    message: form.get("message"),
+  };
+
+  const res = await fetch(`${location.origin}/message`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(messageData),
+  });
+  const resData = await res.json();
+  alert(resData.message);
+});

@@ -271,25 +271,28 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             background: var(--lighter);
+            gap: 20px;
         }
 
-        .get-in-touch ul li{
-            list-style: none;
-            margin: 5px 0;
+        .get-in-touch>div{
+            padding: 20px;
         }
 
-        .get-in-touch a{
-            color: var(--primary);
-            text-decoration: none;
+        .get-in-touch h2{
+            font-size: 40px;
+            margin-bottom: 20px;
         }
+
+       .get-in-touch img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 20px;
+        display: block;
+       }
     
-        .get-in-touch>div {
-            padding: 50px;
-        }
     
-        .get-in-touch div:nth-child(2) {
-            background: var(--light);
-        }
+        
     
         .get-in-touch form {
             margin: 20px 0;
@@ -725,18 +728,12 @@
         }
     
         .get-in-touch>div {
-            padding: 15px;
+            padding: 10px;
         }
 
-        .get-in-touch ul li{
-            list-style: none;
-            margin: 5px 0;
-        }
-
-        .get-in-touch a{
-            color: var(--primary);
-            text-decoration: none;
-        }
+         .get-in-touch img{
+        display: none;
+       }
     
     
         .get-in-touch form {
