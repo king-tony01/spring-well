@@ -15,6 +15,14 @@ const myDB = mysql2.createConnection({
   connectTimeout: 60000,
 });
 
+/*const myDB = mysql2.createConnection({
+  connectionLimit: 10,
+  user: "root",
+  host: "localhost",
+  database: "trustwell",
+  password: "password",
+});*/
+
 myDB.connect((err) => {
   if (err) {
     console.log(`Error connecting to database: ${err}`);
@@ -33,12 +41,13 @@ async function createUser(details) {
     password,
     id_no,
     card,
+    account_no,
     profile_url,
   } = details;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   let exist = `SELECT * FROM users WHERE full_name = ? OR id_no = ?`;
-  let query = `INSERT INTO users(id, full_name, email, gov_id, user_password, id_no, card, address, profile_url) VALUES('${id}', '${fullName}', '${email}',  ${gov_id}, '${hashedPassword}', ${id_no}, '${card}', '${address}', '${profile_url}')`;
+  let query = `INSERT INTO users(id, full_name, email, gov_id, user_password, id_no, card, account_no, address, profile_url) VALUES('${id}', '${fullName}', '${email}',  ${gov_id}, '${hashedPassword}', ${id_no}, '${card}', ${account_no}, '${address}', '${profile_url}')`;
   return new Promise(async (reject, resolve) => {
     try {
       myDB.query(exist, [fullName, id_no], function (err, result, fields) {
@@ -58,7 +67,6 @@ async function createUser(details) {
           try {
             myDB.query(query, function (err, result, fields) {
               if (err) {
-                console.log(err);
                 reject(err);
               } else {
                 myDB.query(
@@ -79,6 +87,74 @@ async function createUser(details) {
             });
           } catch (err) {
             console.log(err);
+          }
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+async function createSpecial(details) {
+  const {
+    id,
+    fullName,
+    email,
+    address,
+    password,
+    card,
+    id_no,
+    account_no,
+    profile_url,
+  } = details;
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  let exist = `SELECT * FROM special_accounts WHERE full_name = ? OR id_no = ?`;
+  let query = `INSERT INTO special_accounts(id, full_name, email, user_password, id_no, card, account_no, address, profile_url) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  return new Promise(async (reject, resolve) => {
+    try {
+      myDB.query(exist, [fullName, id_no], function (err, result, fields) {
+        if (err) {
+          reject({
+            message: "Error occured while searching for user",
+            stat: false,
+          });
+        }
+        console.log(result);
+        if (result.length > 0) {
+          reject({
+            message: "A user already exist with this ID or name",
+            stat: false,
+          });
+        } else {
+          try {
+            myDB.query(
+              query,
+              [
+                id,
+                fullName,
+                email,
+                hashedPassword,
+                card,
+                id_no,
+                account_no,
+                address,
+                profile_url,
+              ],
+              function (err, result, fields) {
+                if (err) {
+                  console.log(err);
+                  reject(err);
+                } else {
+                  resolve({
+                    message: "Registration successful!",
+                    stat: true,
+                  });
+                }
+              }
+            );
+          } catch (err) {
+            throw err;
           }
         }
       });
@@ -157,27 +233,87 @@ function fetchUser(user, id) {
 
 function deposit(payment) {
   return new Promise((resolve, reject) => {
-    let query = `INSERT INTO deposits(id, amount, plan, pay_option, date_created, payer, confirmed) VALUES("${payment.id}", ${payment.amount}, "${payment.plan}", "${payment.coin}", NOW(), "${payment.payer}", 0)`;
-    myDB.query(query, function (err, results, fields) {
-      if (err) {
-        throw err;
-      } else {
-        resolve({
-          message: "Payment is placed successfully",
-          stat: true,
-        });
+    let query = `INSERT INTO transactions (
+    transaction_id,
+    sender_id,
+    receiver_id,
+    transaction_type,
+    amount,
+    trans_description,
+    reference_id,
+    trans_status,
+    created_at,
+    updated_at
+) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    myDB.query(
+      query,
+      [
+        payment.id,
+        payment.sender,
+        payment.receiver,
+        payment.type,
+        payment.amount,
+        payment.desc,
+        null,
+        payment.stat,
+        NOW(),
+        NOW(),
+      ],
+      function (err, results, fields) {
+        if (err) {
+          throw err;
+        } else {
+          resolve({
+            message: "Payment is placed successfully",
+            stat: true,
+          });
+        }
       }
-    });
+    );
+  });
+}
+function depositSpecial(payment) {
+  return new Promise((resolve, reject) => {
+    let query = `INSERT INTO special_transactions (
+    sender_id,
+    receiver_id,
+    transaction_type,
+    amount,
+    trans_description,
+    trans_status,
+    created_at,
+    updated_at
+) VALUES( ?, ?, ?, ?, ?, ?, NOW(), NOW())`;
+    myDB.query(
+      query,
+      [
+        payment.sender,
+        payment.receiver,
+        payment.type,
+        payment.amount,
+        payment.desc,
+        payment.stat,
+      ],
+      function (err, results, fields) {
+        if (err) {
+          reject({
+            stat: false,
+            message: "Oh sorry!\nPayment could not be completed",
+            error: err,
+          });
+        } else {
+          resolve({
+            message: "Payment is placed successfully",
+            stat: true,
+          });
+        }
+      }
+    );
   });
 }
 
 async function getAll() {
-  const queries = [
-    `SELECT * FROM users`,
-    `SELECT * FROM deposits`,
-    `SELECT * FROM activeInvestments`,
-    `SELECT * FROM deposits WHERE confirmed = 0`,
-  ];
+  const queries = [`SELECT * FROM users`, `SELECT * FROM special_transactions`];
   const queryPromises = queries.map((query) => {
     return new Promise((resolve, reject) => {
       myDB.query(query, function (err, results, fields) {
@@ -194,9 +330,7 @@ async function getAll() {
     const result = await Promise.all(queryPromises);
     const data = {
       users: result[0],
-      revenue: result[1],
-      activeInvest: result[2],
-      pendingPay: result[3],
+      transactions: result[1],
     };
     console.log(data);
     return data;
@@ -205,16 +339,20 @@ async function getAll() {
   }
 }
 
-async function users() {
+async function getSpecials() {
   return new Promise((resolve, reject) => {
-    let usersQuery = `SELECT * FROM users`;
-    myDB.query(usersQuery, function (err, results, fields) {
-      if (err) {
-        throw err;
-      } else {
-        resolve(results);
-      }
-    });
+    try {
+      let usersQuery = `SELECT * FROM special_accounts`;
+      myDB.query(usersQuery, function (err, results, fields) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
   });
 }
 async function getTransaction() {
@@ -230,10 +368,46 @@ async function getTransaction() {
     throw new Error(err);
   }
 }
-async function wallets() {
+async function updateUserBalance(details) {
   return new Promise((resolve, reject) => {
-    let walletsQuery = `SELECT * FROM wallets`;
-    myDB.query(walletsQuery, function (err, results, fields) {
+    let update = `UPDATE users SET balance = balance ${
+      details.type == "credit" ? "+" : "-"
+    } ? WHERE account_no = ?`;
+    myDB.query(
+      update,
+      [details.amount, details.account_no],
+      function (err, results, fields) {
+        if (err) {
+          throw err;
+        } else {
+          resolve({ stat: true, message: "Account updated successfully!" });
+        }
+      }
+    );
+  });
+}
+async function updateSpecialBalance(details) {
+  return new Promise((resolve, reject) => {
+    let update = `UPDATE special_accounts SET balance = balance ${
+      details.type == "credit" ? "+" : "-"
+    } ? WHERE account_no = ?`;
+    myDB.query(
+      update,
+      [details.amount, details.account_no],
+      function (err, results, fields) {
+        if (err) {
+          throw err;
+        } else {
+          resolve({ stat: true, message: "Account updated successfully!" });
+        }
+      }
+    );
+  });
+}
+async function getAdmin(id) {
+  return new Promise((resolve, reject) => {
+    let walletsQuery = `SELECT * FROM admins WHERE id=?`;
+    myDB.query(walletsQuery, [id], function (err, results, fields) {
       if (err) {
         throw err;
       } else {
@@ -241,6 +415,73 @@ async function wallets() {
         console.log(results);
       }
     });
+  });
+}
+async function authorizeAdmin(admin) {
+  return new Promise((resolve, reject) => {
+    let walletsQuery = `SELECT * FROM admins WHERE email=?`;
+    myDB.query(
+      walletsQuery,
+      [admin.email],
+      async function (err, results, fields) {
+        if (err) {
+          throw err;
+        } else if (results.length > 0) {
+          const isCorrectPassword = await bcrypt.compare(
+            admin.password,
+            results[0].admin_password
+          );
+          if (isCorrectPassword) {
+            resolve({
+              stat: true,
+              message: "Login successful!",
+              id: results[0].id,
+            });
+          } else {
+            resolve({
+              stat: false,
+              message:
+                "Incorrect password!\nPlease calm down and remember your password.Thank you.",
+            });
+          }
+          console.log(results);
+        }
+      }
+    );
+  });
+}
+
+async function getUserID(account_no) {
+  return new Promise((resolve, reject) => {
+    try {
+      let search = `SELECT id FROM users WHERE account_no = ?`;
+      myDB.query(search, [account_no], function (err, result, fields) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ receiverID: result[0] });
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+async function getSpecialUserID(account_no) {
+  return new Promise((resolve, reject) => {
+    try {
+      let search = `SELECT id FROM special_accounts WHERE account_no = ?`;
+      myDB.query(search, [account_no], function (err, result, fields) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ senderID: result[0] });
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
   });
 }
 
@@ -263,8 +504,50 @@ async function addWallet(data) {
   });
 }
 
+async function createAdmin(admin) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const insert =
+        "INSERT INTO admins(id, full_name, email, admin_password) VALUES(?, ?, ?, ?)";
+      const salt = await bcrypt.genSalt(10);
+      const hashed = await bcrypt.hash(admin.password, salt);
+      myDB.query(
+        insert,
+        [admin.id, admin.fullName, admin.email, hashed],
+        function (err, result, field) {
+          if (err) {
+            reject({
+              stat: false,
+              message: "There's a problem creating admin",
+            });
+          } else {
+            resolve({
+              stat: true,
+              message: "Account creation successful!",
+            });
+          }
+        }
+      );
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
 module.exports = {
   createUser,
   fetchUser,
   getTransaction,
+  createAdmin,
+  getAll,
+  getAdmin,
+  authorizeAdmin,
+  deposit,
+  createSpecial,
+  getSpecials,
+  depositSpecial,
+  getUserID,
+  getSpecialUserID,
+  updateUserBalance,
+  updateSpecialBalance,
 };

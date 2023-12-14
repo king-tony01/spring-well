@@ -6,7 +6,29 @@ const formidable = require("formidable");
 const contentType = require("./contentType.js");
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
-const { createUser, fetchUser, getTransaction } = require("./database.js");
+// Configure Cloudinary with your credentials
+cloudinary.config({
+  cloud_name: "dmejjae45",
+  api_key: "744838253882611",
+  api_secret: "DRLqbCN8Es7Ni0XO3j5SmXh0pqU",
+});
+const {
+  createUser,
+  fetchUser,
+  getTransaction,
+  createAdmin,
+  getAll,
+  getAdmin,
+  authorizeAdmin,
+  createSpecial,
+  getSpecials,
+  getUserID,
+  depositSpecial,
+  getSpecialUserID,
+  getSpecialTransactions,
+  updateUserBalance,
+  updateSpecialBalance,
+} = require("./database.js");
 const { message } = require("./mailer.js");
 
 const server = http.createServer(async (req, res) => {
@@ -92,7 +114,6 @@ const server = http.createServer(async (req, res) => {
 
     req.on("end", async () => {
       try {
-        console.log(body);
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(await fetchUser(null, body.id)));
       } catch (err) {
@@ -146,12 +167,6 @@ const server = http.createServer(async (req, res) => {
       const oldPath = files.imageInput[0].filepath;
       const fileName = files.imageInput[0].originalFilename;
       const newPath = `private/profiles/${fileName}`;
-      // Configure Cloudinary with your credentials
-      cloudinary.config({
-        cloud_name: "dmejjae45",
-        api_key: "744838253882611",
-        api_secret: "DRLqbCN8Es7Ni0XO3j5SmXh0pqU",
-      });
 
       // Upload the image to Cloudinary
       cloudinary.uploader.upload(oldPath, async (error, result) => {
@@ -169,6 +184,7 @@ const server = http.createServer(async (req, res) => {
               password: fields.password[0],
               id_no: Number(generateID(10)),
               card: generateCard(),
+              account_no: generateAccountNumber(),
               profile_url: result.secure_url,
             };
             console.log(user);
@@ -176,6 +192,47 @@ const server = http.createServer(async (req, res) => {
               "Content-Type": "application/json",
             });
             res.end(JSON.stringify(await createUser(user)));
+          } catch (err) {
+            console.log(err);
+            res.writeHead(501, {
+              "Content-Type": "application/json",
+            });
+            res.end(JSON.stringify(err));
+          }
+        }
+      });
+    });
+  }
+  if (pathname == "/new-special") {
+    const form = new formidable.IncomingForm();
+    form.parse(req, (err, fields, files) => {
+      // Handle file data
+      if (err) {
+        console.log(err);
+      }
+      const oldPath = files.imageInput[0].filepath;
+      // Upload the image to Cloudinary
+      cloudinary.uploader.upload(oldPath, async (error, result) => {
+        if (error) {
+          console.error("Error uploading image:", error);
+        } else {
+          try {
+            if (err) throw err;
+            const user = {
+              id: generateCode(50),
+              fullName: fields.accountName[0],
+              email: fields.email[0],
+              address: fields.address[0],
+              password: fields.password[0],
+              card: generateCard(),
+              id_no: Number(generateID(10)),
+              account_no: generateAccountNumber(),
+              profile_url: result.secure_url,
+            };
+            res.writeHead(200, {
+              "Content-Type": "application/json",
+            });
+            res.end(JSON.stringify(await createSpecial(user)));
           } catch (err) {
             console.log(err);
             res.writeHead(501, {
@@ -206,6 +263,164 @@ const server = http.createServer(async (req, res) => {
       }
     });
   }
+
+  //Handling Admin routing
+  if (pathname == "/admin") {
+    const filePath = path.join(__dirname, "/admin/public", "login.html");
+    fs.readFile(filePath, "utf-8", (err, data) => {
+      if (err) {
+        console.log(err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Internal server error!" }));
+      } else {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.end(data);
+      }
+    });
+  }
+  if (pathname == "/admin/home") {
+    const filePath = path.join(__dirname, "/admin/private", "page.html");
+    fs.readFile(filePath, "utf-8", (err, data) => {
+      if (err) {
+        console.log(err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Internal server error!" }));
+      } else {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.end(data);
+      }
+    });
+  }
+  if (pathname == "/users") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(await getAll()));
+  }
+  if (pathname == "/all-special") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(await getSpecials()));
+  }
+
+  if (pathname == "/admin/detail") {
+    let body;
+    req.on("data", (chunk) => {
+      body = chunk;
+    });
+    req.on("end", async () => {
+      try {
+        let adminId = JSON.parse(body);
+        const { id } = adminId;
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(await getAdmin(id)));
+      } catch (err) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(err));
+      }
+    });
+  }
+  if (pathname == "/admin/auth") {
+    let body;
+    req.on("data", (chunk) => {
+      body = chunk;
+    });
+    req.on("end", async () => {
+      try {
+        let admin = JSON.parse(body);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(await authorizeAdmin(admin)));
+      } catch (err) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(err));
+      }
+    });
+  }
+  if (pathname == "/new-admin") {
+    let body;
+    req.on("data", (chunk) => {
+      body = chunk;
+    });
+    req.on("end", async () => {
+      try {
+        let admin = JSON.parse(body);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(await createAdmin(admin)));
+      } catch (err) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(err));
+      }
+    });
+  }
+  if (pathname == "/new-transaction") {
+    let body;
+    req.on("data", (chunk) => {
+      body = chunk;
+    });
+    req.on("end", async () => {
+      try {
+        let transaction = JSON.parse(body);
+        if (transaction.type == "Deposit") {
+          const { senderID } = await getSpecialUserID(
+            Number(transaction.sender)
+          );
+          const { receiverID } = await getUserID(Number(transaction.receiver));
+          const payment = {
+            sender: senderID.id,
+            receiver: receiverID.id,
+            type: transaction.type,
+            amount: parseFloat(transaction.amount),
+            desc: transaction.desc,
+            stat: transaction.stat,
+          };
+          const details = {
+            amount: parseFloat(transaction.amount),
+            account_no: Number(transaction.receiver),
+            type: "credit",
+          };
+          const specialDetails = {
+            amount: parseFloat(transaction.amount),
+            account_no: Number(transaction.sender),
+            type: "subtract",
+          };
+          await updateSpecialBalance(specialDetails);
+          await updateUserBalance(details);
+          console.log(payment);
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify(await depositSpecial(payment)));
+        } else if (transaction.type == "Withdrawal") {
+          /*const { senderID } = await getSpecialUserID(
+            Number(transaction.sender)
+          );
+          const { receiverID } = await getUserID(Number(transaction.receiver));
+          const payment = {
+            sender: senderID.id,
+            receiver: receiverID.id,
+            type: transaction.type,
+            amount: parseFloat(transaction.amount),
+            desc: transaction.desc,
+            stat: transaction.stat,
+          };*/
+          const details = {
+            amount: parseFloat(transaction.amount),
+            account_no: Number(transaction.owner),
+            type: "subtract",
+          };
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify(await updateUserBalance(details)));
+        } else if (transaction.type == "fund-special") {
+          const details = {
+            amount: parseFloat(transaction.amount),
+            account_no: Number(transaction.owner),
+            type: "credit",
+          };
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify(await updateSpecialBalance(details)));
+        }
+      } catch (err) {
+        console.log(err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(err));
+      }
+    });
+  }
 });
 
 function generateCode(length) {
@@ -228,6 +443,16 @@ function generateID(length) {
   }
 
   return code;
+}
+function generateAccountNumber() {
+  const characters = "0123456789";
+  let code = "";
+  for (let i = 0; i < 10; i++) {
+    let index = Math.floor(Math.random() * characters.length);
+    code += characters.charAt(index);
+  }
+
+  return +code;
 }
 function generateCard() {
   let length = 16;

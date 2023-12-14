@@ -65,7 +65,6 @@ sendBtn.addEventListener("click", async (e) => {
   sendBtn.textContent = "Signing up...";
   const form = new FormData(document.querySelector("form"));
   for (const [key, value] of form) {
-    console.log(key, ":", value);
     if (value == "" || form.get("imageInput").name == "") {
       alert("Please fill all details");
       sendBtn.textContent = "Sign Up";

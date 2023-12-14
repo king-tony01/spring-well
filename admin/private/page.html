@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!--<link rel="stylesheet" href="/fontawesome-free-6.3.0-web/css/all.css" />-->
+    <link rel="stylesheet" href="/admin/private/page.css" />
+    <title>Springwell Trust</title>
+  </head>
+  <body>
+    <main>
+      <nav>
+        <h1>SPRINGWELL TRUST</h1>
+        <div class="admin-profile">
+          <i class="fas fa-user-tie"></i>
+          <div>
+            <b class="admin-name">username</b>
+            <small class="admin-email">email</small>
+          </div>
+        </div>
+        <ul class="main-nav">
+          <li class="tab active" data-tab="overview">
+            <i class="fas fa-dashboard"></i> Overview
+          </li>
+          <li class="tab" data-tab="clients">
+            <i class="fas fa-users"></i> Clients
+          </li>
+          <li class="tab" data-tab="portfolio" id="portfolio">
+            <i class="fas fa-money-bill-alt"></i> Portfolio
+          </li>
+          <li class="tab" data-tab="message">
+            <i class="fas fa-message"></i> Message
+          </li>
+          <li class="tab" data-tab="logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <section class="top-bar">
+          <div class="top-bar-wrap">
+            <div class="search">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                name="search"
+                id="search"
+                placeholder="Search"
+              />
+            </div>
+            <div class="greeting">
+              <b>Good day!</b>
+              <h2 class="username admin-name">username</h2>
+            </div>
+          </div>
+          <i class="fas fa-bell"></i>
+        </section>
+        <section class="page"></section>
+        <section class="modal"></section>
+        <!--Alert window starts here-->
+        <section class="alert success"></section>
+      </section>
+      <script type="module" src="/admin/private/js/app.js"></script>
+    </main>
+  </body>
+</html>
