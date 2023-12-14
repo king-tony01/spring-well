@@ -28,6 +28,9 @@ const {
   getSpecialTransactions,
   updateUserBalance,
   updateSpecialBalance,
+  depositUser,
+  getUserBalance,
+  getUserAccountNo,
 } = require("./database.js");
 const { message } = require("./mailer.js");
 
@@ -129,14 +132,60 @@ const server = http.createServer(async (req, res) => {
     req.on("data", (chunk) => {
       body = chunk;
     });
-    req.on("end", () => {
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({
-          stat: true,
-          data: "Transaction placed succesfully",
-        })
-      );
+    req.on("end", async () => {
+      try {
+        const transaction = JSON.parse(body);
+        const { receiverID } = await getUserID(Number(transaction.receiver));
+        if (!receiverID) {
+          res.writeHead(404, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              message: "The receiver account number does not exist",
+              stat: false,
+            })
+          );
+          return;
+        }
+        const userAccountNo = await getUserAccountNo(transaction.senderId);
+        const userBalance = await getUserBalance(userAccountNo.account_no);
+        console.log(userBalance[0].balance);
+        if (userBalance[0].balance < transaction.amount) {
+          res.writeHead(404, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              message: "Transaction amount is higher than balance",
+              stat: false,
+            })
+          );
+          return;
+        }
+        const payment = {
+          sender: transaction.senderId,
+          receiver: receiverID.id,
+          type: transaction.type,
+          amount: parseFloat(transaction.amount),
+          desc: transaction.desc,
+          stat: "Pending",
+        };
+        const senderDetails = {
+          amount: parseFloat(payment.amount),
+          account_no: Number(userAccountNo.account_no),
+          type: "subtract",
+        };
+        const receiverDetails = {
+          amount: parseFloat(payment.amount),
+          account_no: Number(transaction.receiver),
+          type: "credit",
+        };
+        await updateUserBalance(senderDetails);
+        await updateUserBalance(receiverDetails);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(await depositUser(payment)));
+      } catch (err) {
+        console.log(err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(err));
+      }
     });
   }
 
@@ -187,7 +236,6 @@ const server = http.createServer(async (req, res) => {
               account_no: generateAccountNumber(),
               profile_url: result.secure_url,
             };
-            console.log(user);
             res.writeHead(200, {
               "Content-Type": "application/json",
             });
@@ -229,6 +277,18 @@ const server = http.createServer(async (req, res) => {
               account_no: generateAccountNumber(),
               profile_url: result.secure_url,
             };
+            await createUser({
+              id: user.id,
+              fullName: user.fullName,
+              email: user.email,
+              gov_id: null,
+              address: user.address,
+              password: user.password,
+              id_no: user.id_no,
+              card: user.card,
+              account_no: user.account_no,
+              profile_url: user.profile_url,
+            });
             res.writeHead(200, {
               "Content-Type": "application/json",
             });

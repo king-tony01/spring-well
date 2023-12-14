@@ -311,6 +311,45 @@ function depositSpecial(payment) {
     );
   });
 }
+function depositUser(payment) {
+  return new Promise((resolve, reject) => {
+    let query = `INSERT INTO transactions (
+    sender_id,
+    receiver_id,
+    transaction_type,
+    amount,
+    trans_description,
+    trans_status,
+    created_at,
+    updated_at
+) VALUES( ?, ?, ?, ?, ?, ?, NOW(), NOW())`;
+    myDB.query(
+      query,
+      [
+        payment.sender,
+        payment.receiver,
+        payment.type,
+        payment.amount,
+        payment.desc,
+        payment.stat,
+      ],
+      function (err, results, fields) {
+        if (err) {
+          reject({
+            stat: false,
+            message: "Oh sorry!\nPayment could not be completed",
+            error: err,
+          });
+        } else {
+          resolve({
+            message: "Payment is placed successfully",
+            stat: true,
+          });
+        }
+      }
+    );
+  });
+}
 
 async function getAll() {
   const queries = [`SELECT * FROM users`, `SELECT * FROM special_transactions`];
@@ -355,11 +394,43 @@ async function getSpecials() {
     }
   });
 }
-async function getTransaction() {
+async function getUserBalance(account_no) {
+  return new Promise((resolve, reject) => {
+    try {
+      let usersQuery = `SELECT balance FROM users WHERE account_no = ?`;
+      myDB.query(usersQuery, [account_no], function (err, results, fields) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+async function getSpecialBalance(account_no) {
+  return new Promise((resolve, reject) => {
+    try {
+      let usersQuery = `SELECT balance FROM special_aacounts WHERE account_no = ?`;
+      myDB.query(usersQuery, [account_no], function (err, results, fields) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+async function getTransaction(id) {
   try {
     return new Promise((resolve, reject) => {
-      let query = `SELECT * FROM transactions`;
-      myDB.query(query, function (err, results, fields) {
+      let query = `SELECT * FROM transactions WHERE sender_id = ? OR receiver_id = ?`;
+      myDB.query(query, [id, id], function (err, results, fields) {
         if (err) throw err;
         resolve(results);
       });
@@ -467,6 +538,22 @@ async function getUserID(account_no) {
     }
   });
 }
+async function getUserAccountNo(id) {
+  return new Promise((resolve, reject) => {
+    try {
+      let search = `SELECT account_no FROM users WHERE id = ?`;
+      myDB.query(search, [id], function (err, result, fields) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result[0]);
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
 
 async function getSpecialUserID(account_no) {
   return new Promise((resolve, reject) => {
@@ -550,4 +637,8 @@ module.exports = {
   getSpecialUserID,
   updateUserBalance,
   updateSpecialBalance,
+  depositUser,
+  getUserBalance,
+  getSpecialBalance,
+  getUserAccountNo,
 };

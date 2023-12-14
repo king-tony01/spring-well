@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     users: users,
     revenue: money.reduce((total, current) => total + current, 0),
   };
-  console.log(money);
   const specials = await getJSON(null, "/all-special");
   const portData = {
     specialAccounts: specials,
@@ -33,6 +32,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       tab.classList.add("active");
       const clicked = tab.getAttribute("data-tab");
       switch (clicked) {
+        case "main-site":
+          window.open("https://www.springwelltrust.org", "_blank");
+          break;
         case "overview":
           data = await newData();
           overview(overviewData, portData);

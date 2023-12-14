@@ -56,9 +56,9 @@ async function init() {
                   ? transactions.map((transaction) => {
                       return `<li>
                 <div>
-                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_description}</span>
                   </div>
-                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
+                  <span class="date">${transaction.created_at}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
                 </li>
                 `;
@@ -88,9 +88,9 @@ async function init() {
                 ? transactions.map((transaction) => {
                     return `<li>
                 <div>
-                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_description}</span>
                   </div>
-                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
+                  <span class="date">${transaction.created_at}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
                 </li>
                 `;
@@ -144,9 +144,9 @@ navigation.forEach((con) => {
                              ? transactions.map((transaction) => {
                                  return `<li>
                 <div>
-                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_description}</span>
                   </div>
-                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
+                  <span class="date">${transaction.created_at}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
                 </li>
                 `;
@@ -177,9 +177,9 @@ navigation.forEach((con) => {
                              ? transactions.map((transaction) => {
                                  return `<li>
                 <div>
-                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_description}</span>
                   </div>
-                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
+                  <span class="date">${transaction.created_at}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
                 </li>
                 `;
@@ -213,9 +213,9 @@ navigation.forEach((con) => {
                  ? transactions.map((transaction) => {
                      return `<li>
                 <div>
-                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_description}</span>
                   </div>
-                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
+                  <span class="date">${transaction.created_at}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
                 </li>
                 `;
@@ -273,9 +273,9 @@ navigation.forEach((con) => {
                   ? transactions.map((transaction) => {
                       return `<li>
                 <div>
-                    <i class="fas fa-wallet"></i><span>${transaction.trans_desc}</span>
+                    <i class="fas fa-wallet"></i><span>${transaction.trans_description}</span>
                   </div>
-                  <span class="date">${transaction.date_created}</span> <span>$${transaction.amount}</span
+                  <span class="date">${transaction.created_at}</span> <span>$${transaction.amount}</span
                   ><i class="fas fa-ellipsis-vertical"></i>
                 </li>
                 `;
@@ -300,39 +300,48 @@ navigation.forEach((con) => {
 const now = new Date();
 
 finalSend.addEventListener("click", async () => {
-  let transactionList = document.querySelector(".transactions-list");
-  const balance = document.getElementById("balance");
+  if (
+    document.getElementById("amount").value == "" ||
+    document.getElementById("accountnumber").value == "" ||
+    document.getElementById("desc").value == ""
+  ) {
+    alert("Please provide a valid account number, amount, and description");
+    return;
+  }
   const transaction = {
-    amount: `Amount: ${document.getElementById("amount").value}`,
-    transId: `Transaction ID: ${Date.now() * (Math.random() * 10)}`,
-    transDate: `Date: ${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`,
+    amount: parseFloat(document.getElementById("amount").value),
+    desc: document.getElementById("desc").value,
+    type: "Transfer",
+    senderId: location.search.slice(3),
+    receiver: +document.getElementById("accountnumber").value,
   };
-  sendModal.classList.remove("active");
-  successModal.classList.add("active");
-  document.querySelector(".trans-amount").textContent = transaction.amount;
-  document.querySelector(".trans-id").textContent = transaction.transId;
-  document.querySelector(".trans-date").textContent = transaction.transDate;
+  const preview = {
+    amount: `Amount: ${transaction.amount}`,
+    receiver: `Sent To: ${transaction.receiver}`,
+    desc: `Description: ${transaction.desc}`,
+  };
 
   const response = await fetch(`${location.origin}/newtransaction`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      amount: `${document.getElementById("amount").value}`,
-      date: `${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`,
-      desc: `${document.getElementById("desc").value}`,
-      transId: `Transaction ID: ${Date.now() * Math.floor(Math.random() * 10)}`,
-      userId: location.search.slice(3),
-    }),
+    body: JSON.stringify(transaction),
   });
   const data = await response.json();
   if (data.stat) {
+    sendModal.classList.remove("active");
+    successModal.classList.add("active");
+    document.querySelector(".trans-amount").textContent = preview.amount;
+    document.querySelector(".sent-to").textContent = preview.receiver;
+    document.querySelector(".trans-desc").textContent = preview.desc;
     let timer = setTimeout(() => {
       successModal.classList.remove("active");
       clearTimeout(timer);
     }, 3000);
     await init();
+  } else {
+    alert(data.message);
   }
 });
 
@@ -373,7 +382,7 @@ async function chart() {
         }),
         borderColor: "rgb(218, 192, 163)", // Line color
         borderWidth: 2, // Line width
-        fill: false, // Don't fill the area under the line
+        fill: true, // Don't fill the area under the line
         tension: 0.4,
       },
     ],
