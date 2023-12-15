@@ -1,902 +1,874 @@
 :root {
-    --lighter: #F8F0E5;
-    --light: #EADBC8;
-    --secondary: rgb(218, 192, 163);
-    --primary: #102C57;
+  --lighter: #f8f0e5;
+  --light: #eadbc8;
+  --secondary: rgb(218, 192, 163);
+  --primary: #102c57;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
-@media(min-width: 1024px){
-    body {
-            display: grid;
-            grid-template-columns: 1fr 4fr;
-            height: 100vh;
-            gap: 20px;
-        }
-    
-        body nav {
-            padding: 20px;
-            background: var(--lighter);
-            position: relative;
-        }
-    
-        .bottom-nav {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-        }
-    
-        nav ul {
-            margin-top: 20px;
-        }
-    
-        nav ul li {
-            list-style: none;
-        }
-    
-        nav ul li button.active {
-            background: var(--primary);
-            color: var(--lighter);
-        }
-    
-        nav ul li button {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            border: none;
-            background: none;
-            font-size: 16px;
-            font-weight: 600;
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: .3s all;
-        }
-    
-        nav ul li button:hover {
-            background: var(--primary);
-            color: var(--lighter);
-        }
-    
-        nav ul li button i {
-            display: inline-block;
-            margin-right: 10px;
-        }
-    
-        main .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 0;
-        }
-    
-        .wrap {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-    
-        .search {
-            border-radius: 10px;
-            background: var(--lighter);
-        }
-    
-        .search input {
-            padding: 10px;
-            font-size: 20px;
-            border: none;
-            outline: none;
-            background: none;
-        }
-    
-        .search .fas {
-            width: 40px;
-            height: 40px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 600;
-        }
-    
-        .wrap .fa-bell {
-            width: 50px;
-            height: 50px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 600;
-            border: 1px solid #d7d7d7;
-            border-radius: 50%;
-            margin: 0 20px;
-        }
-    
-        main .header img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 20px;
-        }
-    
-        .wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-    
-        .cards-head,
-        .transactions-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-    
-        .cards-head button {
-            padding: 10px 20px;
-            display: inline-block;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-    
-        .cards-con-main {
-            display: flex;
-            align-items: center;
-            overflow-x: scroll;
-            margin: 20px 0;
-        }
-    
-        .cards-con-main::-webkit-scrollbar {
-            width: 0;
-        }
-    
-        .atm {
-            padding: 20px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, var(--light), var(--secondary));
-            margin: 10px;
-            width: 300px;
-        }
-    
-        .atm img {
-            width: 50px;
-            display: block;
-        }
-    
-        .atm b {
-            display: block;
-        }
-    
-        .balance {
-            display: block;
-            font-size: 25px;
-        }
-    
-        .card-number span {
-            display: inline-block;
-            margin-right: 10px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-    
-        .transactions-head select {
-            padding: 10px;
-            border: 1px solid #d7d7d7;
-            border-radius: 10px;
-        }
-    
-        .transactions-list {
-            height: 200px;
-            overflow-y: scroll;
-        }
-    
-        .transactions-list::-webkit-scrollbar {
-            width: 0;
-        }
-    
-        .transactions-list li {
-            list-style: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 3px 0;
-        }
-    
-        .transactions-list li div {
-            font-weight: 600;
-        }
-    
-        .transactions-list li .date {
-            color: #7a7a7a
-        }
-    
-        .transactions-list li .fa-wallet {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--secondary);
-            margin-right: 10px;
-        }
-    
-        .transactions-list li .fa-ellipsis-vertical {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-    
-        .transactions-list li .fa-ellipsis-vertical:hover {
-            background: var(--lighter);
-        }
-    
-        .chart-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-    
-        .chart-head button {
-            border: 1px solid #d7d7d7;
-            padding: 10px;
-            background: none;
-            border-radius: 20px;
-            font-weight: 600;
-            display: inline-block;
-            margin-right: 10px;
-        }
-    
-        .chart-head div span.active {
-            display: inline-block;
-            padding: 10px;
-            border: 1px solid #d7d7d7;
-            border-radius: 20px;
-        }
-    
-        .chart-head div span {
-            display: inline-block;
-            margin: 0 10px;
-        }
-    
-        .history {
-            height: 150px;
-            overflow-y: scroll;
-        }
-    
-        .history::-webkit-scrollbar {
-            width: 0;
-        }
-    
-        .history li {
-            list-style: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 3px 0;
-            padding-right: 10px;
-        }
-    
-        .history li .inner {
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-        }
-    
-        .history li .history-date {
-            color: #7a7a7a;
-            display: block;
-            font-size: 12px;
-        }
-    
-        .history li .fa-wallet {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--secondary);
-            margin-right: 10px;
-        }
-    
-        .wallet-action button {
-            padding: 10px 40px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-    
-        .wallet-action button:nth-child(2) {
-            margin-left: 20px;
-        }
-    
-        #sendmoney {
-            background: var(--primary);
-            color: var(--light);
-        }
-    
-        .wallet {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-    
-        .send-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            display: none;
-            padding: 10px;
-        }
-    
-        .send-modal.active {
-            display: flex;
-        }
-    
-        .send-con {
-            max-width: 400px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-            background: var(--lighter);
-        }
-    
-        .send-con .fa-close {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 20px;
-            color: var(--primary);
-            cursor: pointer;
-        }
-    
-        .send-con input {
-            border: none;
-            background: var(--light);
-            border-radius: 5px;
-            outline: none;
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            margin: 10px 0;
-            min-width: 300px;
-        }
-    
-        .inputs {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-        }
-    
-        .inputs button {
-            font-size: 20px;
-            font-weight: 800;
-            border: none;
-            background: none;
-            border-radius: 5px;
-            padding: 10px 0;
-        }
-    
-        .inputs button:hover {
-            background: var(--light);
-        }
-    
-        #finalSend {
-            display: block;
-            margin-top: 20px;
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            background: var(--primary);
-            color: var(--light);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-    
-        .sucess-modal {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            display: none;
-        }
-    
-        .sucess-modal.active {
-            display: flex;
-        }
-    
-        .success-con {
-            background: var(--lighter);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-            user-select: none;
-        }
-    
-        .success-con .suc-head {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-    
-        .success-con .far {
-            font-size: 30px;
-            margin-right: 10px;
-            display: block;
-            color: green;
-        }
-    
-        .success-con b {
-            display: block;
-        }
-    
-        .success-con h3 {
-            color: var(--primary);
-        }
+@media (min-width: 1024px) {
+  body {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    height: 100vh;
+    gap: 20px;
+  }
 
-        .nav-hidden{
-            display: none;
-        }
+  body nav {
+    padding: 20px;
+    background: var(--lighter);
+    position: relative;
+  }
 
-        #myChart{
-            height: 200px;
-            width: 100%;
-        }
+  .bottom-nav {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+  }
+
+  nav ul {
+    margin-top: 20px;
+  }
+
+  nav ul li {
+    list-style: none;
+  }
+
+  nav ul li button.active {
+    background: var(--primary);
+    color: var(--lighter);
+  }
+
+  nav ul li button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: none;
+    background: none;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s all;
+  }
+
+  nav ul li button:hover {
+    background: var(--primary);
+    color: var(--lighter);
+  }
+
+  nav ul li button i {
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  main .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+  }
+
+  .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .search {
+    border-radius: 10px;
+    background: var(--lighter);
+  }
+
+  .search input {
+    padding: 10px;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    background: none;
+  }
+
+  .search .fas {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .wrap .fa-bell {
+    width: 50px;
+    height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 600;
+    border: 1px solid #d7d7d7;
+    border-radius: 50%;
+    margin: 0 20px;
+  }
+
+  main .header img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 20px;
+  }
+
+  .wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .transactions-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cards-con-main {
+    margin: 20px 0;
+  }
+
+  .atm {
+    padding: 20px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--light), var(--secondary));
+    margin: 10px 0;
+    width: 300px;
+  }
+
+  .atm img {
+    width: 50px;
+    display: block;
+  }
+
+  .atm b {
+    display: block;
+  }
+
+  .balance {
+    display: block;
+    font-size: 25px;
+  }
+
+  .card-number span {
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .transactions-head select {
+    padding: 10px;
+    border: 1px solid #d7d7d7;
+    border-radius: 10px;
+  }
+
+  .transactions-list {
+    height: 200px;
+    overflow-y: scroll;
+  }
+
+  .transactions-list::-webkit-scrollbar {
+    width: 0;
+  }
+
+  .transactions-list li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 3px 0;
+  }
+
+  .transactions-list li div {
+    font-weight: 600;
+  }
+
+  .transactions-list li .date {
+    color: #7a7a7a;
+  }
+
+  .transactions-list li .fa-wallet {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--secondary);
+    margin-right: 10px;
+  }
+
+  .transactions-list li .fa-ellipsis-vertical {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .transactions-list li .fa-ellipsis-vertical:hover {
+    background: var(--lighter);
+  }
+
+  .chart-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .chart-head button {
+    border: 1px solid #d7d7d7;
+    padding: 10px;
+    background: none;
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  .chart-head div span.active {
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #d7d7d7;
+    border-radius: 20px;
+  }
+
+  .chart-head div span {
+    display: inline-block;
+    margin: 0 10px;
+  }
+
+  .history {
+    height: 150px;
+    overflow-y: scroll;
+  }
+
+  .history::-webkit-scrollbar {
+    width: 0;
+  }
+
+  .history li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 3px 0;
+    padding-right: 10px;
+  }
+
+  .history li .inner {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+  }
+
+  .history li .history-date {
+    color: #7a7a7a;
+    display: block;
+    font-size: 12px;
+  }
+
+  .history li .fa-wallet {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--secondary);
+    margin-right: 10px;
+  }
+
+  .wallet-action button {
+    padding: 10px 40px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .wallet-action button:nth-child(2) {
+    margin-left: 20px;
+  }
+
+  #sendmoney {
+    background: var(--primary);
+    color: var(--light);
+  }
+
+  .wallet {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .send-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+    padding: 10px;
+  }
+
+  .send-modal.active {
+    display: flex;
+  }
+
+  .send-con {
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    background: var(--lighter);
+  }
+
+  .send-con .fa-close {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: var(--primary);
+    cursor: pointer;
+  }
+
+  .send-con input {
+    border: none;
+    background: var(--light);
+    border-radius: 5px;
+    outline: none;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 10px 0;
+    min-width: 300px;
+  }
+
+  .inputs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .inputs button {
+    font-size: 20px;
+    font-weight: 800;
+    border: none;
+    background: none;
+    border-radius: 5px;
+    padding: 10px 0;
+  }
+
+  .inputs button:hover {
+    background: var(--light);
+  }
+
+  #finalSend {
+    display: block;
+    margin-top: 20px;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary);
+    color: var(--light);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .sucess-modal {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+  }
+
+  .sucess-modal.active {
+    display: flex;
+  }
+
+  .success-con {
+    background: var(--lighter);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    user-select: none;
+  }
+
+  .success-con .suc-head {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .success-con .far {
+    font-size: 30px;
+    margin-right: 10px;
+    display: block;
+    color: green;
+  }
+
+  .success-con b {
+    display: block;
+  }
+
+  .success-con h3 {
+    color: var(--primary);
+  }
+
+  .nav-hidden {
+    display: none;
+  }
+
+  #myChart {
+    height: 200px;
+    width: 100%;
+  }
 }
-
-
 
 /*----SMALLER SCREENS---*/
 
-@media(max-width: 1023px){
-    
-        body nav {
-            background: var(--lighter);
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.15);
-            width: 100%;
-        }
-    
-        .bottom-nav {
-            display: none;
-        }
+@media (max-width: 1023px) {
+  body nav {
+    background: var(--lighter);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.15);
+    width: 100%;
+  }
 
-        body nav h1{
-            display: none;
-        }
+  .bottom-nav {
+    display: none;
+  }
 
-        nav ul{
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-        }
-    
-        nav ul li {
-            list-style: none;
-            padding: 10px;
-            font-size: 20px;
-        }
+  body nav h1 {
+    display: none;
+  }
 
-        nav ul li button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            border: none;
-            background: none;
-            font-weight: 600;
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: .3s all;
-        }
+  nav ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
 
-        .nav{
-            display: none;
-        }
+  nav ul li {
+    list-style: none;
+    padding: 10px;
+    font-size: 20px;
+  }
 
-        .break{
-            display: none;
-        }
-    
-        nav ul li button:hover {
-            background: var(--primary);
-            color: var(--lighter);
-        }
-    
-        nav ul li button i {
-            display: inline-block;
-            font-size: 20px;
-        }
+  nav ul li button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border: none;
+    background: none;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s all;
+  }
 
-        main{
-            padding: 10px;
-        }
+  .nav {
+    display: none;
+  }
 
-        main .greet{
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
+  .break {
+    display: none;
+  }
 
-        #myChart{
-            height: 400px;
-            width: 100%;
-        }
-    
-        .wrap {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-    
-        .search {
-            border-radius: 10px;
-            background: var(--lighter);
-        }
-    
-        .search input {
-            padding: 10px;
-            font-size: 16px;
-            border: none;
-            outline: none;
-            background: none;
-        }
-    
-        .search .fas {
-            width: 30px;
-            height: 30px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
-    
-        .wrap .fa-bell {
-            width: 30px;
-            height: 30px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            border: 1px solid #d7d7d7;
-            border-radius: 50%;
-            margin: 0 10px;
-        }
-    
-        main .header img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 10px;
-        }
-    
-        .cards-head,
-        .transactions-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-    
-        .cards-head button {
-            padding: 10px 20px;
-            display: inline-block;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-    
-        .cards-con-main {
-            margin: 20px 0;
-        }
-    
-        .atm {
-            padding: 20px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, var(--light), var(--secondary));
-            margin: 10px;
-            width: 300px;
-        }
-    
-        .atm img {
-            width: 50px;
-            display: block;
-        }
-    
-        .atm b {
-            display: block;
-        }
-    
-        .balance {
-            display: block;
-            font-size: 20px;
-        }
-    
-        .card-number span {
-            display: inline-block;
-            margin-right: 5px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-        }
-    
-        .transactions-head select {
-            padding: 5px;
-            border: 1px solid #d7d7d7;
-            border-radius: 10px;
-        }
+  nav ul li button:hover {
+    background: var(--primary);
+    color: var(--lighter);
+  }
 
-        .transactions-list li {
-            list-style: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 3px 0;
-        }
-    
-        .transactions-list li div {
-            font-weight: 600;
-        }
-    
-        .transactions-list li .date {
-            color: #7a7a7a
-        }
-    
-        .transactions-list li .fa-wallet {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--secondary);
-            margin-right: 10px;
-        }
-    
-        .transactions-list li .fa-ellipsis-vertical {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-    
-        .transactions-list li .fa-ellipsis-vertical:hover {
-            background: var(--lighter);
-        }
-    
-        .chart-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-    
-        .chart-head button {
-            border: 1px solid #d7d7d7;
-            padding: 10px;
-            background: none;
-            border-radius: 20px;
-            font-weight: 600;
-            display: inline-block;
-            margin-right: 10px;
-        }
-    
-        .chart-head div span.active {
-            display: inline-block;
-            padding: 10px;
-            border: 1px solid #d7d7d7;
-            border-radius: 20px;
-        }
-    
-        .chart-head div span {
-            display: inline-block;
-            margin: 0 10px;
-        }
-    
-        .history li {
-            list-style: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 3px 0;
-            padding-right: 10px;
-        }
-    
-        .history li .inner {
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-        }
-    
-        .history li .history-date {
-            color: #7a7a7a;
-            display: block;
-            font-size: 12px;
-        }
-    
-        .history li .fa-wallet {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--secondary);
-            margin-right: 5px;
-        }
-    
-        .wallet-action button {
-            padding: 10px 40px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-    
-        .wallet-action button:nth-child(2) {
-            margin-left: 10px;
-        }
-    
-        #sendmoney {
-            background: var(--primary);
-            color: var(--light);
-        }
-    
-        .send-modal {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            left: 0;
-            top: 0;
-            z-index: 10;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            display: none;
-            padding: 10px;
-        }
-    
-        .send-modal.active {
-            display: flex;
-        }
-    
-        .send-con {
-            max-width: 400px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-            background: var(--lighter);
-        }
-    
-        .send-con .fa-close {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 20px;
-            color: var(--primary);
-            cursor: pointer;
-        }
-    
-        .send-con input {
-            border: none;
-            background: var(--light);
-            border-radius: 5px;
-            outline: none;
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            margin: 10px 0;
-            min-width: 300px;
-        }
-    
-        .inputs {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-        }
-    
-        .inputs button {
-            font-size: 20px;
-            font-weight: 800;
-            border: none;
-            background: none;
-            border-radius: 5px;
-            padding: 10px 0;
-        }
-    
-        .inputs button:hover {
-            background: var(--light);
-        }
-    
-        #finalSend {
-            display: block;
-            margin-top: 20px;
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            background: var(--primary);
-            color: var(--light);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-    
-        .sucess-modal {
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
-            position: fixed;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            display: none;
-            padding: 10px;
-        }
-    
-        .sucess-modal.active {
-            display: flex;
-        }
-    
-        .success-con {
-            background: var(--lighter);
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-            user-select: none;
-        }
-    
-        .success-con .suc-head {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-    
-        .success-con .far {
-            font-size: 20px;
-            margin-right: 5px;
-            display: block;
-            color: green;
-        }
-    
-        .success-con b {
-            display: block;
-        }
-    
-        .success-con h3 {
-            color: var(--primary);
-        }
+  nav ul li button i {
+    display: inline-block;
+    font-size: 20px;
+  }
+
+  main {
+    padding: 10px;
+  }
+
+  main .greet {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  #myChart {
+    height: 400px;
+    width: 100%;
+  }
+
+  .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .search {
+    border-radius: 10px;
+    background: var(--lighter);
+  }
+
+  .search input {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    background: none;
+  }
+
+  .search .fas {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+  }
+
+  .wrap .fa-bell {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    border: 1px solid #d7d7d7;
+    border-radius: 50%;
+    margin: 0 10px;
+  }
+
+  main .header img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  .transactions-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .cards-con-main {
+    margin: 20px 0;
+  }
+
+  .atm {
+    padding: 20px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--light), var(--secondary));
+    margin: 10px 0;
+    width: 300px;
+  }
+
+  .atm img {
+    width: 50px;
+    display: block;
+  }
+
+  .atm b {
+    display: block;
+  }
+
+  .balance {
+    display: block;
+    font-size: 20px;
+  }
+
+  .card-number span {
+    display: inline-block;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+
+  .transactions-head select {
+    padding: 5px;
+    border: 1px solid #d7d7d7;
+    border-radius: 10px;
+  }
+
+  .transactions-list li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 3px 0;
+  }
+
+  .transactions-list li div {
+    font-weight: 600;
+  }
+
+  .transactions-list li .date {
+    color: #7a7a7a;
+  }
+
+  .transactions-list li .fa-wallet {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--secondary);
+    margin-right: 10px;
+  }
+
+  .transactions-list li .fa-ellipsis-vertical {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .transactions-list li .fa-ellipsis-vertical:hover {
+    background: var(--lighter);
+  }
+
+  .chart-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .chart-head button {
+    border: 1px solid #d7d7d7;
+    padding: 10px;
+    background: none;
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  .chart-head div span.active {
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #d7d7d7;
+    border-radius: 20px;
+  }
+
+  .chart-head div span {
+    display: inline-block;
+    margin: 0 10px;
+  }
+
+  .history li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 3px 0;
+    padding-right: 10px;
+  }
+
+  .history li .inner {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+  }
+
+  .history li .history-date {
+    color: #7a7a7a;
+    display: block;
+    font-size: 12px;
+  }
+
+  .history li .fa-wallet {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--secondary);
+    margin-right: 5px;
+  }
+
+  .wallet-action button {
+    padding: 10px 40px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .wallet-action button:nth-child(2) {
+    margin-left: 10px;
+  }
+
+  #sendmoney {
+    background: var(--primary);
+    color: var(--light);
+  }
+
+  .send-modal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+    padding: 10px;
+  }
+
+  .send-modal.active {
+    display: flex;
+  }
+
+  .send-con {
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    background: var(--lighter);
+  }
+
+  .send-con .fa-close {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: var(--primary);
+    cursor: pointer;
+  }
+
+  .send-con input {
+    border: none;
+    background: var(--light);
+    border-radius: 5px;
+    outline: none;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 10px 0;
+    min-width: 300px;
+  }
+
+  .inputs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .inputs button {
+    font-size: 20px;
+    font-weight: 800;
+    border: none;
+    background: none;
+    border-radius: 5px;
+    padding: 10px 0;
+  }
+
+  .inputs button:hover {
+    background: var(--light);
+  }
+
+  #finalSend {
+    display: block;
+    margin-top: 20px;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary);
+    color: var(--light);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .sucess-modal {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+    padding: 10px;
+  }
+
+  .sucess-modal.active {
+    display: flex;
+  }
+
+  .success-con {
+    background: var(--lighter);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    user-select: none;
+  }
+
+  .success-con .suc-head {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .success-con .far {
+    font-size: 20px;
+    margin-right: 5px;
+    display: block;
+    color: green;
+  }
+
+  .success-con b {
+    display: block;
+  }
+
+  .success-con h3 {
+    color: var(--primary);
+  }
 }

@@ -105,6 +105,15 @@
       <div class="send-con">
         <i class="fas fa-close"></i>
         <div>
+          <p>Account name</p>
+          <input
+            type="text"
+            name="accountName"
+            id="accountName"
+            placeholder="Name of account holder"
+          />
+        </div>
+        <div>
           <p>Account number</p>
           <input
             type="text"
@@ -113,25 +122,29 @@
             placeholder="0123456789"
           />
         </div>
+        <div>
+          <p>Bank name</p>
+          <input
+            type="text"
+            name="bankName"
+            id="bankName"
+            placeholder="Name of bank"
+          />
+        </div>
         <div class="amount">
           <p>Enter amount</p>
           <input
-            type="text"
+            type="number"
             name="amount"
             id="amount"
             placeholder="$ 1 - 100,000"
+            min="0"
+            max="100000"
           />
         </div>
         <div class="amount">
           <p>Description</p>
           <input type="text" name="desc" id="desc" placeholder="Why sending" />
-        </div>
-        <div class="inputs">
-          <button>1</button><button>2</button><button>3</button
-          ><button>4</button><button>5</button><button>6</button
-          ><button>7</button><button>8</button><button>9</button
-          ><button>.</button><button>0</button
-          ><button><i class="fas fa-delete-left"></i></button>
         </div>
         <button id="finalSend">Send</button>
       </div>

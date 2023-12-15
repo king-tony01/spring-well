@@ -26,8 +26,7 @@ async function init() {
           <div>
             <div class="cards-container">
               <div class="cards-head">
-                <h3>My Cards</h3>
-                <button>Add New</button>
+                <h3>My Card</h3>
               </div>
               <div class="cards-con-main">
                 <div class="atm">
@@ -114,8 +113,7 @@ navigation.forEach((con) => {
           <div>
             <div class="cards-container">
               <div class="cards-head">
-                <h3>My Cards</h3>
-                <button>Add New</button>
+                <h3>My Card</h3>
               </div>
               <div class="cards-con-main">
                 <div class="atm">
@@ -233,11 +231,9 @@ navigation.forEach((con) => {
           <div>
             <div class="cards-container">
               <div class="cards-head">
-                <h3>My Cards</h3>
-                <button>Add New</button>
               </div>
               <div class="cards-con-main">
-                
+                <h3>My Card</h3>
                 <div class="atm">
                   <img src="/images/master.png" alt="" />
                   <b class="balance">$ <span id="balance">${mainUser.balance.toLocaleString(
@@ -253,9 +249,7 @@ navigation.forEach((con) => {
             <div class="wallet-action">
               <button id="sendmoney">
                 <i class="fas fa-arrow-up" ></i> Send</button
-              ><button id="recievemoney">
-                <i class="fas fa-arrow-down"></i> Request
-              </button>
+              >
             </div>
           </div>
 
@@ -346,13 +340,6 @@ finalSend.addEventListener("click", async () => {
 });
 
 let amountCon = document.getElementById("amount");
-inputs.addEventListener("click", (e) => {
-  if (e.target.textContent !== "") {
-    amountCon.value += e.target.textContent;
-  } else if (e.target.classList.contains("fa-delete-left")) {
-    amountCon.value = amountCon.value.slice(0, -1);
-  }
-});
 
 closeModal.addEventListener("click", () => {
   sendModal.classList.remove("active");

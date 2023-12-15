@@ -148,7 +148,6 @@ const server = http.createServer(async (req, res) => {
         }
         const userAccountNo = await getUserAccountNo(transaction.senderId);
         const userBalance = await getUserBalance(userAccountNo.account_no);
-        console.log(userBalance[0].balance);
         if (userBalance[0].balance < transaction.amount) {
           res.writeHead(404, { "Content-Type": "application/json" });
           res.end(
@@ -440,9 +439,39 @@ const server = http.createServer(async (req, res) => {
             account_no: Number(transaction.sender),
             type: "subtract",
           };
+          if (!receiverID) {
+            res.writeHead(404, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                message: "The receiver account number does not exist",
+                stat: false,
+              })
+            );
+            return;
+          }
+          const userAccountNo = await getUserAccountNo(payment.sender);
+          const userBalance = await getUserBalance(userAccountNo.account_no);
+          if (userBalance[0].balance < payment.amount) {
+            res.writeHead(404, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                message: "Transaction amount is higher than balance",
+                stat: false,
+              })
+            );
+            return;
+          }
+          const userPayment = {
+            sender: payment.sender,
+            receiver: payment.receiver,
+            type: payment.type,
+            amount: payment.amount,
+            desc: payment.desc,
+            stat: "Completed",
+          };
           await updateSpecialBalance(specialDetails);
           await updateUserBalance(details);
-          console.log(payment);
+          await depositUser(userPayment);
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify(await depositSpecial(payment)));
         } else if (transaction.type == "Withdrawal") {
