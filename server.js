@@ -20,17 +20,14 @@ const {
   getAll,
   getAdmin,
   authorizeAdmin,
-  createSpecial,
   getSpecials,
   getUserID,
   depositSpecial,
-  getSpecialUserID,
-  getSpecialTransactions,
   updateUserBalance,
-  updateSpecialBalance,
   depositUser,
   getUserBalance,
   getUserAccountNo,
+  createGeneral,
 } = require("./database.js");
 const { message } = require("./mailer.js");
 
@@ -127,67 +124,6 @@ const server = http.createServer(async (req, res) => {
     });
   }
 
-  if (pathname == "/newtransaction") {
-    let body;
-    req.on("data", (chunk) => {
-      body = chunk;
-    });
-    req.on("end", async () => {
-      try {
-        const transaction = JSON.parse(body);
-        const { receiverID } = await getUserID(Number(transaction.receiver));
-        if (!receiverID) {
-          res.writeHead(404, { "Content-Type": "application/json" });
-          res.end(
-            JSON.stringify({
-              message: "The receiver account number does not exist",
-              stat: false,
-            })
-          );
-          return;
-        }
-        const userAccountNo = await getUserAccountNo(transaction.senderId);
-        const userBalance = await getUserBalance(userAccountNo.account_no);
-        if (userBalance[0].balance < transaction.amount) {
-          res.writeHead(404, { "Content-Type": "application/json" });
-          res.end(
-            JSON.stringify({
-              message: "Transaction amount is higher than balance",
-              stat: false,
-            })
-          );
-          return;
-        }
-        const payment = {
-          sender: transaction.senderId,
-          receiver: receiverID.id,
-          type: transaction.type,
-          amount: parseFloat(transaction.amount),
-          desc: transaction.desc,
-          stat: "Pending",
-        };
-        const senderDetails = {
-          amount: parseFloat(payment.amount),
-          account_no: Number(userAccountNo.account_no),
-          type: "subtract",
-        };
-        const receiverDetails = {
-          amount: parseFloat(payment.amount),
-          account_no: Number(transaction.receiver),
-          type: "credit",
-        };
-        await updateUserBalance(senderDetails);
-        await updateUserBalance(receiverDetails);
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify(await depositUser(payment)));
-      } catch (err) {
-        console.log(err);
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify(err));
-      }
-    });
-  }
-
   if (pathname == "/transactions") {
     let body;
     req.on("data", (chunk) => {
@@ -213,8 +149,6 @@ const server = http.createServer(async (req, res) => {
         console.log(err);
       }
       const oldPath = files.imageInput[0].filepath;
-      const fileName = files.imageInput[0].originalFilename;
-      const newPath = `private/profiles/${fileName}`;
 
       // Upload the image to Cloudinary
       cloudinary.uploader.upload(oldPath, async (error, result) => {
@@ -230,6 +164,7 @@ const server = http.createServer(async (req, res) => {
               gov_id: Number(fields.idNumber[0]),
               address: fields.address[0],
               password: fields.password[0],
+              account_type: "user",
               id_no: Number(generateID(10)),
               card: generateCard(),
               account_no: generateAccountNumber(),
@@ -269,29 +204,19 @@ const server = http.createServer(async (req, res) => {
               id: generateCode(50),
               fullName: fields.accountName[0],
               email: fields.email[0],
+              gov_id: null,
               address: fields.address[0],
               password: fields.password[0],
+              account_type: "special_account",
               card: generateCard(),
               id_no: Number(generateID(10)),
               account_no: generateAccountNumber(),
               profile_url: result.secure_url,
             };
-            await createUser({
-              id: user.id,
-              fullName: user.fullName,
-              email: user.email,
-              gov_id: null,
-              address: user.address,
-              password: user.password,
-              id_no: user.id_no,
-              card: user.card,
-              account_no: user.account_no,
-              profile_url: user.profile_url,
-            });
             res.writeHead(200, {
               "Content-Type": "application/json",
             });
-            res.end(JSON.stringify(await createSpecial(user)));
+            res.end(JSON.stringify(await createGeneral(user)));
           } catch (err) {
             console.log(err);
             res.writeHead(501, {
@@ -417,27 +342,12 @@ const server = http.createServer(async (req, res) => {
       try {
         let transaction = JSON.parse(body);
         if (transaction.type == "Deposit") {
-          const { senderID } = await getSpecialUserID(
-            Number(transaction.sender)
-          );
-          const { receiverID } = await getUserID(Number(transaction.receiver));
+          const { receiverID } = await getUserID(Number(transaction.owner));
           const payment = {
-            sender: senderID.id,
-            receiver: receiverID.id,
+            owner: receiverID.id,
             type: transaction.type,
             amount: parseFloat(transaction.amount),
-            desc: transaction.desc,
-            stat: transaction.stat,
-          };
-          const details = {
-            amount: parseFloat(transaction.amount),
-            account_no: Number(transaction.receiver),
-            type: "credit",
-          };
-          const specialDetails = {
-            amount: parseFloat(transaction.amount),
-            account_no: Number(transaction.sender),
-            type: "subtract",
+            desc: `Credit to ${transaction.owner}`,
           };
           if (!receiverID) {
             res.writeHead(404, { "Content-Type": "application/json" });
@@ -449,29 +359,12 @@ const server = http.createServer(async (req, res) => {
             );
             return;
           }
-          const userAccountNo = await getUserAccountNo(payment.sender);
-          const userBalance = await getUserBalance(userAccountNo.account_no);
-          if (userBalance[0].balance < payment.amount) {
-            res.writeHead(404, { "Content-Type": "application/json" });
-            res.end(
-              JSON.stringify({
-                message: "Transaction amount is higher than balance",
-                stat: false,
-              })
-            );
-            return;
-          }
-          const userPayment = {
-            sender: payment.sender,
-            receiver: payment.receiver,
-            type: payment.type,
+          const details = {
             amount: payment.amount,
-            desc: payment.desc,
-            stat: "Completed",
+            account_no: Number(transaction.owner),
+            type: "credit",
           };
-          await updateSpecialBalance(specialDetails);
           await updateUserBalance(details);
-          await depositUser(userPayment);
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify(await depositSpecial(payment)));
         } else if (transaction.type == "Withdrawal") {
@@ -494,15 +387,68 @@ const server = http.createServer(async (req, res) => {
           };
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify(await updateUserBalance(details)));
-        } else if (transaction.type == "fund-special") {
-          const details = {
+        } else if (transaction.type == "Transfer") {
+          const senderId = await getUserID(Number(transaction.sender));
+          const receiverId = await getUserID(Number(transaction.receiver));
+          const payment = {
+            sender: senderId.account.id,
+            receiver: receiverId.account.id,
+            accountName: transaction.accountName || null,
+            bankName: transaction.bankName || null,
+            type: transaction.type,
             amount: parseFloat(transaction.amount),
-            account_no: Number(transaction.owner),
-            type: "credit",
+            desc: transaction.desc,
+            stat: transaction.stat,
           };
+          await updateUserBalance({
+            amount: payment.amount,
+            account_no: +transaction.sender,
+            type: "subtract",
+          });
+          await updateUserBalance({
+            amount: payment.amount,
+            account_no: +transaction.receiver,
+            type: "credit",
+          });
           res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify(await updateSpecialBalance(details)));
+          res.end(JSON.stringify(await depositUser(payment)));
         }
+      } catch (err) {
+        console.log(err);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(err));
+      }
+    });
+  }
+
+  if (pathname == "/newtransaction") {
+    let body;
+    req.on("data", (chunk) => {
+      body = chunk;
+    });
+    req.on("end", async () => {
+      try {
+        let transaction = JSON.parse(body);
+        console.log(transaction);
+        const { account } = await getUserAccountNo(transaction.sender);
+        const receiverId = await getUserID(Number(transaction.owner));
+        const payment = {
+          sender: transaction.sender,
+          receiver: receiverId.account.id,
+          accountName: transaction.accountName || null,
+          bankName: transaction.bankName || null,
+          type: transaction.type,
+          amount: parseFloat(transaction.amount),
+          desc: transaction.desc,
+          stat: transaction.stat,
+        };
+        await updateUserBalance({
+          amount: payment.amount,
+          account_no: account.account_no,
+          type: "subtract",
+        });
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(await depositUser(payment)));
       } catch (err) {
         console.log(err);
         res.writeHead(500, { "Content-Type": "application/json" });

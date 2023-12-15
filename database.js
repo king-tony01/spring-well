@@ -39,6 +39,7 @@ async function createUser(details) {
     gov_id,
     address,
     password,
+    account_type,
     id_no,
     card,
     account_no,
@@ -46,8 +47,8 @@ async function createUser(details) {
   } = details;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-  let exist = `SELECT * FROM users WHERE full_name = ? OR id_no = ?`;
-  let query = `INSERT INTO users(id, full_name, email, gov_id, user_password, id_no, card, account_no, address, profile_url) VALUES('${id}', '${fullName}', '${email}',  ${gov_id}, '${hashedPassword}', ${id_no}, '${card}', ${account_no}, '${address}', '${profile_url}')`;
+  let exist = `SELECT * FROM accounts WHERE full_name = ? OR id_no = ?`;
+  let query = `INSERT INTO accounts(id, full_name, email, gov_id, user_password, account_type, id_no, card, account_no, address, profile_url) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   return new Promise(async (reject, resolve) => {
     try {
       myDB.query(exist, [fullName, id_no], function (err, result, fields) {
@@ -65,26 +66,42 @@ async function createUser(details) {
           });
         } else {
           try {
-            myDB.query(query, function (err, result, fields) {
-              if (err) {
-                reject(err);
-              } else {
-                myDB.query(
-                  `SELECT * FROM users WHERE full_name='${fullName}'`,
-                  async function (err, result, fields) {
-                    if (err) {
-                      reject(err);
-                    } else {
-                      await deliverMail(details);
-                      resolve({
-                        message: "Registration successful!",
-                        stat: true,
-                      });
+            myDB.query(
+              query,
+              [
+                id,
+                fullName,
+                email,
+                gov_id,
+                hashedPassword,
+                account_type,
+                id_no,
+                card,
+                account_no,
+                address,
+                profile_url,
+              ],
+              function (err, result, fields) {
+                if (err) {
+                  reject(err);
+                } else {
+                  myDB.query(
+                    `SELECT * FROM accounts WHERE full_name='${fullName}'`,
+                    async function (err, result, fields) {
+                      if (err) {
+                        reject(err);
+                      } else {
+                        await deliverMail(details);
+                        resolve({
+                          message: "Registration successful!",
+                          stat: true,
+                        });
+                      }
                     }
-                  }
-                );
+                  );
+                }
               }
-            });
+            );
           } catch (err) {
             console.log(err);
           }
@@ -95,13 +112,15 @@ async function createUser(details) {
     }
   });
 }
-async function createSpecial(details) {
+
+async function createGeneral(details) {
   const {
     id,
     fullName,
     email,
     address,
     password,
+    account_type,
     card,
     id_no,
     account_no,
@@ -109,55 +128,35 @@ async function createSpecial(details) {
   } = details;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-  let exist = `SELECT * FROM special_accounts WHERE full_name = ? OR id_no = ?`;
-  let query = `INSERT INTO special_accounts(id, full_name, email, user_password, id_no, card, account_no, address, profile_url) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  let query = `INSERT INTO accounts(id, full_name, email, user_password, account_type, id_no, card, account_no, address, profile_url) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   return new Promise(async (reject, resolve) => {
     try {
-      myDB.query(exist, [fullName, id_no], function (err, result, fields) {
-        if (err) {
-          reject({
-            message: "Error occured while searching for user",
-            stat: false,
-          });
-        }
-        console.log(result);
-        if (result.length > 0) {
-          reject({
-            message: "A user already exist with this ID or name",
-            stat: false,
-          });
-        } else {
-          try {
-            myDB.query(
-              query,
-              [
-                id,
-                fullName,
-                email,
-                hashedPassword,
-                card,
-                id_no,
-                account_no,
-                address,
-                profile_url,
-              ],
-              function (err, result, fields) {
-                if (err) {
-                  console.log(err);
-                  reject(err);
-                } else {
-                  resolve({
-                    message: "Registration successful!",
-                    stat: true,
-                  });
-                }
-              }
-            );
-          } catch (err) {
-            throw err;
+      myDB.query(
+        query,
+        [
+          id,
+          fullName,
+          email,
+          hashedPassword,
+          account_type,
+          id_no,
+          card,
+          account_no,
+          address,
+          profile_url,
+        ],
+        function (err, result, fields) {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            resolve({
+              message: "Registration successful!",
+              stat: true,
+            });
           }
         }
-      });
+      );
     } catch (err) {
       reject(err);
     }
@@ -168,7 +167,7 @@ function fetchUser(user, id) {
   try {
     if (!user && !id) return;
     if (user && id == null) {
-      const query = `SELECT * FROM users WHERE id_no = '${user.id_no}';`;
+      const query = `SELECT * FROM accounts WHERE id_no = '${user.id_no}';`;
       return new Promise((resolve, reject) => {
         myDB.query(query, async function (err, results, fields) {
           if (err) {
@@ -200,7 +199,7 @@ function fetchUser(user, id) {
         });
       });
     } else if (id && user == null) {
-      const query = `SELECT * FROM users WHERE id = '${id}';`;
+      const query = `SELECT * FROM accounts WHERE id = '${id}';`;
       return new Promise((resolve, reject) => {
         myDB.query(query, async function (err, results, fields) {
           if (err) {
@@ -219,6 +218,9 @@ function fetchUser(user, id) {
                 profile: results[0].profile_url,
                 balance: results[0].balance,
                 card: results[0].card,
+                id_no: results[0].id_no,
+                account_no: results[0].account_no,
+                address: results[0].address,
               },
               stat: true,
             });
@@ -231,64 +233,27 @@ function fetchUser(user, id) {
   }
 }
 
-function deposit(payment) {
+function depositUser(payment) {
   return new Promise((resolve, reject) => {
     let query = `INSERT INTO transactions (
-    transaction_id,
     sender_id,
     receiver_id,
-    transaction_type,
-    amount,
-    trans_description,
-    reference_id,
-    trans_status,
-    created_at,
-    updated_at
-) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    myDB.query(
-      query,
-      [
-        payment.id,
-        payment.sender,
-        payment.receiver,
-        payment.type,
-        payment.amount,
-        payment.desc,
-        null,
-        payment.stat,
-        NOW(),
-        NOW(),
-      ],
-      function (err, results, fields) {
-        if (err) {
-          throw err;
-        } else {
-          resolve({
-            message: "Payment is placed successfully",
-            stat: true,
-          });
-        }
-      }
-    );
-  });
-}
-function depositSpecial(payment) {
-  return new Promise((resolve, reject) => {
-    let query = `INSERT INTO special_transactions (
-    sender_id,
-    receiver_id,
+    account_name,
+    bank_name,
     transaction_type,
     amount,
     trans_description,
     trans_status,
     created_at,
     updated_at
-) VALUES( ?, ?, ?, ?, ?, ?, NOW(), NOW())`;
+) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`;
     myDB.query(
       query,
       [
         payment.sender,
         payment.receiver,
+        payment.accountName,
+        payment.bankName,
         payment.type,
         payment.amount,
         payment.desc,
@@ -311,28 +276,19 @@ function depositSpecial(payment) {
     );
   });
 }
-function depositUser(payment) {
+function depositSpecial(payment) {
   return new Promise((resolve, reject) => {
-    let query = `INSERT INTO transactions (
-    sender_id,
-    receiver_id,
+    let query = `INSERT INTO special_transactions (
+    receiver,
     transaction_type,
     amount,
     trans_description,
-    trans_status,
     created_at,
     updated_at
-) VALUES( ?, ?, ?, ?, ?, ?, NOW(), NOW())`;
+) VALUES( ?, ?, ?, ?, NOW(), NOW())`;
     myDB.query(
       query,
-      [
-        payment.sender,
-        payment.receiver,
-        payment.type,
-        payment.amount,
-        payment.desc,
-        payment.stat,
-      ],
+      [payment.owner, payment.type, payment.amount, payment.desc],
       function (err, results, fields) {
         if (err) {
           reject({
@@ -352,7 +308,11 @@ function depositUser(payment) {
 }
 
 async function getAll() {
-  const queries = [`SELECT * FROM users`, `SELECT * FROM special_transactions`];
+  const queries = [
+    `SELECT * FROM accounts`,
+    `SELECT * FROM transactions`,
+    `SELECT * FROM special_transactions`,
+  ];
   const queryPromises = queries.map((query) => {
     return new Promise((resolve, reject) => {
       myDB.query(query, function (err, results, fields) {
@@ -369,7 +329,7 @@ async function getAll() {
     const result = await Promise.all(queryPromises);
     const data = {
       users: result[0],
-      transactions: result[1],
+      transactions: [result[1], result[2]],
     };
     console.log(data);
     return data;
@@ -381,7 +341,7 @@ async function getAll() {
 async function getSpecials() {
   return new Promise((resolve, reject) => {
     try {
-      let usersQuery = `SELECT * FROM special_accounts`;
+      let usersQuery = `SELECT * FROM accounts WHERE account_type = "special_account"`;
       myDB.query(usersQuery, function (err, results, fields) {
         if (err) {
           reject(err);
@@ -397,7 +357,7 @@ async function getSpecials() {
 async function getUserBalance(account_no) {
   return new Promise((resolve, reject) => {
     try {
-      let usersQuery = `SELECT balance FROM users WHERE account_no = ?`;
+      let usersQuery = `SELECT balance FROM accounts WHERE account_no = ?`;
       myDB.query(usersQuery, [account_no], function (err, results, fields) {
         if (err) {
           reject(err);
@@ -410,22 +370,7 @@ async function getUserBalance(account_no) {
     }
   });
 }
-async function getSpecialBalance(account_no) {
-  return new Promise((resolve, reject) => {
-    try {
-      let usersQuery = `SELECT balance FROM special_aacounts WHERE account_no = ?`;
-      myDB.query(usersQuery, [account_no], function (err, results, fields) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results);
-        }
-      });
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
+
 async function getTransaction(id) {
   try {
     return new Promise((resolve, reject) => {
@@ -441,7 +386,7 @@ async function getTransaction(id) {
 }
 async function updateUserBalance(details) {
   return new Promise((resolve, reject) => {
-    let update = `UPDATE users SET balance = balance ${
+    let update = `UPDATE accounts SET balance = balance ${
       details.type == "credit" ? "+" : "-"
     } ? WHERE account_no = ?`;
     myDB.query(
@@ -449,7 +394,11 @@ async function updateUserBalance(details) {
       [details.amount, details.account_no],
       function (err, results, fields) {
         if (err) {
-          throw err;
+          reject({
+            stat: false,
+            message: "Failed to update account.\nPlease contact our CFC.",
+            error: err,
+          });
         } else {
           resolve({ stat: true, message: "Account updated successfully!" });
         }
@@ -457,24 +406,7 @@ async function updateUserBalance(details) {
     );
   });
 }
-async function updateSpecialBalance(details) {
-  return new Promise((resolve, reject) => {
-    let update = `UPDATE special_accounts SET balance = balance ${
-      details.type == "credit" ? "+" : "-"
-    } ? WHERE account_no = ?`;
-    myDB.query(
-      update,
-      [details.amount, details.account_no],
-      function (err, results, fields) {
-        if (err) {
-          throw err;
-        } else {
-          resolve({ stat: true, message: "Account updated successfully!" });
-        }
-      }
-    );
-  });
-}
+
 async function getAdmin(id) {
   return new Promise((resolve, reject) => {
     let walletsQuery = `SELECT * FROM admins WHERE id=?`;
@@ -525,12 +457,12 @@ async function authorizeAdmin(admin) {
 async function getUserID(account_no) {
   return new Promise((resolve, reject) => {
     try {
-      let search = `SELECT id FROM users WHERE account_no = ?`;
+      let search = `SELECT id FROM accounts WHERE account_no = ?`;
       myDB.query(search, [account_no], function (err, result, fields) {
         if (err) {
           reject(err);
         } else {
-          resolve({ receiverID: result[0] });
+          resolve({ account: result[0] });
         }
       });
     } catch (err) {
@@ -541,53 +473,17 @@ async function getUserID(account_no) {
 async function getUserAccountNo(id) {
   return new Promise((resolve, reject) => {
     try {
-      let search = `SELECT account_no FROM users WHERE id = ?`;
+      let search = `SELECT account_no FROM accounts WHERE id = ?`;
       myDB.query(search, [id], function (err, result, fields) {
         if (err) {
           reject(err);
         } else {
-          resolve(result[0]);
+          resolve({ account: result[0] });
         }
       });
     } catch (err) {
       reject(err);
     }
-  });
-}
-
-async function getSpecialUserID(account_no) {
-  return new Promise((resolve, reject) => {
-    try {
-      let search = `SELECT id FROM special_accounts WHERE account_no = ?`;
-      myDB.query(search, [account_no], function (err, result, fields) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve({ senderID: result[0] });
-        }
-      });
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
-
-async function addWallet(data) {
-  return new Promise((resolve, reject) => {
-    let query = `INSERT INTO wallets(id, wallet_name, address, date_created) VALUES("${data.id}", "${data.walletName}", "${data.address}", "${data.dateCreated}")`;
-    myDB.query(query, function (err, results, fields) {
-      if (err) {
-        reject({
-          stat: false,
-          message: err,
-        });
-      } else {
-        resolve({
-          stat: true,
-          message: "Address added successfully",
-        });
-      }
-    });
   });
 }
 
@@ -623,22 +519,18 @@ async function createAdmin(admin) {
 
 module.exports = {
   createUser,
+  createGeneral,
   fetchUser,
   getTransaction,
   createAdmin,
   getAll,
   getAdmin,
   authorizeAdmin,
-  deposit,
-  createSpecial,
   getSpecials,
-  depositSpecial,
   getUserID,
-  getSpecialUserID,
   updateUserBalance,
-  updateSpecialBalance,
   depositUser,
+  depositSpecial,
   getUserBalance,
-  getSpecialBalance,
   getUserAccountNo,
 };

@@ -286,6 +286,23 @@ navigation.forEach((con) => {
           document.querySelector(".send-modal").classList.add("active");
         });
         break;
+      case "profile":
+        page.innerHTML = `        <section class="profile-view">
+          <div class="profile-view-head">
+            <img src="${mainUser.profile}" alt="" />
+            <div>
+              <h2>${mainUser.fullName}</h2>
+              <p>${mainUser.email}</p>
+            </div>
+          </div>
+          <div class="profile-body">
+            <p>ID: ${mainUser.id_no}</p>
+            <p>Card: ${mainUser.card}</p>
+            <p>Acc No: ${mainUser.account_no}</p>
+            <p>Address: ${mainUser.address}</p>
+          </div>
+        </section>`;
+        break;
       default:
         break;
     }
@@ -306,13 +323,11 @@ finalSend.addEventListener("click", async () => {
     amount: parseFloat(document.getElementById("amount").value),
     desc: document.getElementById("desc").value,
     type: "Transfer",
-    senderId: location.search.slice(3),
-    receiver: +document.getElementById("accountnumber").value,
-  };
-  const preview = {
-    amount: `Amount: ${transaction.amount}`,
-    receiver: `Sent To: ${transaction.receiver}`,
-    desc: `Description: ${transaction.desc}`,
+    sender: location.search.slice(3),
+    owner: +document.getElementById("accountnumber").value,
+    accountName: document.getElementById("accountName").value,
+    bankName: document.getElementById("bankName").value,
+    stat: "Pending",
   };
 
   const response = await fetch(`${location.origin}/newtransaction`, {
@@ -326,17 +341,14 @@ finalSend.addEventListener("click", async () => {
   if (data.stat) {
     sendModal.classList.remove("active");
     successModal.classList.add("active");
-    document.querySelector(".trans-amount").textContent = preview.amount;
-    document.querySelector(".sent-to").textContent = preview.receiver;
-    document.querySelector(".trans-desc").textContent = preview.desc;
-    let timer = setTimeout(() => {
-      successModal.classList.remove("active");
-      clearTimeout(timer);
-    }, 3000);
-    await init();
   } else {
     alert(data.message);
   }
+});
+
+const closeSuc = document.getElementById("close-modal");
+closeSuc.addEventListener("click", () => {
+  successModal.classList.remove("active");
 });
 
 let amountCon = document.getElementById("amount");

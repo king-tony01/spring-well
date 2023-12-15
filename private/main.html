@@ -152,17 +152,21 @@
     <section class="sucess-modal">
       <div class="success-con">
         <div class="suc-head">
-          <i class="far fa-circle-check"></i>
-          <h3>Transaction Successful!</h3>
+          <div class="divide">
+            <i class="fas fa-lock"></i>
+            <h3>OTP</h3>
+          </div>
+          <i class="fas fa-close" id="close-modal"></i>
         </div>
         <div>
-          <p>Your transaction has been processed successfully.</p>
+          <p>
+            Please enter your One Time Password (OTP) to complete your
+            transaction.
+          </p>
           <br />
-          <b class="trans-amount"></b>
-          <b class="sent-to"></b>
-          <b class="trans-desc"></b>
+          <input type="number" name="otp" id="otp" autofocus />
           <br />
-          <p>Thank you for choosing our services!</p>
+          <button id="send-otp">Proceed</button>
         </div>
       </div>
     </section>

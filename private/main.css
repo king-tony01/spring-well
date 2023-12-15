@@ -9,8 +9,43 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Poppins", sans-serif;
 }
+
+.suc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.divide {
+  display: flex;
+  align-items: center;
+}
+
+.profile-view-head {
+  padding: 10px;
+  border-bottom: 2px solid var(--lighter);
+  display: flex;
+  align-items: center;
+}
+
+.profile-view-head img {
+  width: 100px;
+  height: 100px;
+  display: block;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+
+.profile-body p {
+  padding: 10px;
+}
+
+.profile-body p:nth-child(even) {
+  background: #f5f5f5;
+}
+
 @media (min-width: 1024px) {
   body {
     display: grid;
@@ -416,6 +451,28 @@
     display: flex;
   }
 
+  .success-con input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: var(--light);
+    font-size: 16px;
+  }
+
+  .success-con button {
+    display: block;
+    padding: 15px;
+    border: none;
+    color: var(--lighter);
+    background: var(--primary);
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
   .success-con {
     background: var(--lighter);
     padding: 20px;
@@ -430,11 +487,10 @@
     align-items: center;
   }
 
-  .success-con .far {
+  .success-con .fas {
     font-size: 30px;
     margin-right: 10px;
     display: block;
-    color: green;
   }
 
   .success-con b {
@@ -849,6 +905,29 @@
     border-radius: 10px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
     user-select: none;
+    max-width: 350px;
+  }
+
+  .success-con input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: var(--light);
+    font-size: 16px;
+  }
+
+  .success-con button {
+    display: block;
+    padding: 15px;
+    border: none;
+    color: var(--lighter);
+    background: var(--primary);
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
   }
 
   .success-con .suc-head {
@@ -857,11 +936,10 @@
     align-items: center;
   }
 
-  .success-con .far {
+  .success-con .fas {
     font-size: 20px;
     margin-right: 5px;
     display: block;
-    color: green;
   }
 
   .success-con b {

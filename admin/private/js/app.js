@@ -11,18 +11,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   let data = await getJSON(null, "/users");
   const { users, transactions } = data;
-  const money = transactions.map((transaction) => {
+  const joinedTransactions = transactions[0].concat(transactions[1]);
+  console.log(transactions);
+  console.log(joinedTransactions);
+  const money = joinedTransactions.map((transaction) => {
     return +transaction.amount;
   });
   const overviewData = {
-    trans: transactions,
+    trans: joinedTransactions,
     users: users,
     revenue: money.reduce((total, current) => total + current, 0),
   };
   const specials = await getJSON(null, "/all-special");
   const portData = {
     specialAccounts: specials,
-    transactions: transactions,
+    transactions: joinedTransactions,
   };
   overview(overviewData, portData);
   const tabs = document.querySelectorAll(".tab");

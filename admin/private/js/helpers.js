@@ -24,17 +24,19 @@ export function editCard(data) {
 }
 
 export function openCardMenu(info) {
-  document.getElementById("openMenu").addEventListener("click", () => {
-    document.querySelector(".atm-menu").classList.add("active");
-    document.querySelectorAll(".inner").forEach((button) => {
-      button.addEventListener("click", () => {
-        const clicked = button.getAttribute("data-id");
-        const modal = document.querySelector(".modal");
-        modal.classList.add("active");
-        switch (clicked) {
-          case "fund":
-            document.querySelector(".atm-menu").classList.remove("active");
-            modal.innerHTML = `<form action="" id="fund-form">
+  const openBtn = document.querySelectorAll(".openMenu");
+  openBtn.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelector(`.${btn.id}`).classList.add("active");
+      document.querySelectorAll(".inner").forEach((button) => {
+        button.addEventListener("click", () => {
+          const clicked = button.getAttribute("data-id");
+          const modal = document.querySelector(".modal");
+          modal.classList.add("active");
+          switch (clicked) {
+            case "fund":
+              document.querySelector(".atm-menu").classList.remove("active");
+              modal.innerHTML = `<form action="" id="fund-form">
             <div class="form-head">
               <h3>Fund special account</h3>
               <i class="fas fa-close" id="close"></i>
@@ -45,7 +47,11 @@ export function openCardMenu(info) {
               id="amount"
               placeholder="Amount"
               min="0"
-              value="${info.account_no}"
+              value="${
+                info.find((user) => {
+                  return user.id == btn.id;
+                }).account_no
+              }"
             />
             <input
               type="number"
@@ -56,45 +62,50 @@ export function openCardMenu(info) {
             />
             <button id="fund-btn">Fund</button>
           </form>`;
-            document
-              .getElementById("fund-form")
-              .addEventListener("submit", async (e) => {
-                e.preventDefault();
-                document.getElementById("fund-btn").textContent =
-                  "In progress..";
-                const form = new FormData(document.querySelector("form"));
-                const transaction = {
-                  owner: info.account_no,
-                  amount: form.get("amount"),
-                  type: "fund-special",
-                  stat: "Completed",
-                };
-                const response = await getJSON(transaction, "/new-transaction");
-                if (response.stat) {
-                  document.getElementById("fund-btn").textContent = "Fund";
-                  closeForm();
-                  alertDisplay(response.message, true);
-                } else {
-                  closeForm();
-                  document.getElementById("fund-btn").textContent = "Fund";
-                  alertDisplay(response.message, false);
-                }
+              document
+                .getElementById("fund-form")
+                .addEventListener("submit", async (e) => {
+                  e.preventDefault();
+                  document.getElementById("fund-btn").textContent =
+                    "In progress..";
+                  const form = new FormData(document.querySelector("form"));
+                  const transaction = {
+                    owner: info.find((user) => {
+                      return user.id == btn.id;
+                    }).account_no,
+                    amount: form.get("amount"),
+                    type: "Deposit",
+                    stat: "Completed",
+                  };
+                  const response = await getJSON(
+                    transaction,
+                    "/new-transaction"
+                  );
+                  if (response.stat) {
+                    document.getElementById("fund-btn").textContent = "Fund";
+                    closeForm();
+                    alertDisplay(response.message, true);
+                  } else {
+                    closeForm();
+                    document.getElementById("fund-btn").textContent = "Fund";
+                    alertDisplay(response.message, false);
+                  }
+                });
+              document.getElementById("close").addEventListener("click", () => {
+                closeForm();
               });
-            document.getElementById("close").addEventListener("click", () => {
-              closeForm();
-            });
-            document.getElementById("close").addEventListener("click", () => {
-              closeForm();
-            });
-            break;
-        }
+              break;
+          }
+        });
       });
     });
   });
 }
 export function closeCardMenu() {
-  document.getElementById("closeMenu").addEventListener("click", () => {
-    document.querySelector(".atm-menu").classList.remove("active");
+  document.querySelectorAll(".closeMenu").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelector(`.${btn.id}`).classList.remove("active");
+    });
   });
 }
 
@@ -156,7 +167,7 @@ export function activateForm(type) {
           amount: form.get("amount"),
           desc: form.get("desc"),
           receiver: form.get("receiver"),
-          type: "Deposit",
+          type: "Transfer",
           stat: "Completed",
         };
         const response = await getJSON(transaction, "/new-transaction");

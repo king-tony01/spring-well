@@ -42,7 +42,7 @@ export function overview(items, data) {
                       transaction.transaction_type == "Deposit" ? "+" : "-"
                     } $${transaction.amount}</b>
                     <small class="status success">${
-                      transaction.trans_status
+                      transaction.trans_status ? transaction.trans_status : ""
                     }</small>
                   </div>
                 </li>`;
@@ -93,8 +93,9 @@ export function clientsView(clients) {
     document.querySelector(".page").innerHTML = `<section>
             <h1>Clients</h1>
             <div class="clients-wrapper">
-            ${clients.map((client) => {
-              return `<div class="client-card" data-id="${client.id}">
+            ${clients
+              .map((client) => {
+                return `<div class="client-card" data-id="${client.id}">
                 <img src="${client.profile_url}" alt="" />
                 <div class="info">
                   <b>${client.full_name}</b>
@@ -102,7 +103,8 @@ export function clientsView(clients) {
                   <b><span>Acc No: ${client.account_no}</span></b>
                 </div>
               </div>`;
-            })}
+              })
+              .join(" ")}
             </div>
           </section>`;
     const cards = document.querySelectorAll(".client-card");
@@ -135,8 +137,8 @@ export function portfolioView(data) {
                 ${specialAccounts
                   .map((user) => {
                     return `<div class="atm">
-                <div class="atm-menu">
-                    <i class="fas fa-close" id="closeMenu"></i>
+                <div class="atm-menu ${user.id}">
+                    <i class="fas fa-close closeMenu" id="${user.id}"></i>
                     <div class="inner" data-id="fund">
                       <i class="fas fa-wallet"></i> Fund
                     </div>
@@ -149,7 +151,9 @@ export function portfolioView(data) {
                   </div>
                   <div class="atm-head">
                     <b>${user.full_name}</b>
-                    <i class="fas fa-ellipsis-vertical" id="openMenu"></i>
+                    <i class="fas fa-ellipsis-vertical openMenu" id="${
+                      user.id
+                    }"></i>
                   </div>
                   <h2 class="balance">$ ${user.balance.toLocaleString(
                     "US"
@@ -185,7 +189,7 @@ export function portfolioView(data) {
                       transaction.transaction_type == "Deposit" ? "+" : "-"
                     } $${transaction.amount}</b>
                     <small class="status success">${
-                      transaction.trans_status
+                      transaction.trans_status ? transaction.trans_status : ""
                     }</small>
                   </div>
                 </li>`;
@@ -208,7 +212,7 @@ export function portfolioView(data) {
           break;
       }
     });
-    openCardMenu(specialAccounts[0]);
+    openCardMenu(specialAccounts);
     closeCardMenu();
   } else {
     document.querySelector(".page").innerHTML = ` <section>
@@ -217,7 +221,7 @@ export function portfolioView(data) {
               <div class="cards-wrapper">
                 <div class="atm">
                   <div class="atm-menu">
-                    <i class="fas fa-close" id="closeMenu"></i>
+                    <i class="fas fa-close closeMenu" id=""></i>
                     <div class="inner" data-id="delete">
                       <i class="fas fa-trash"></i> Remove
                     </div>
