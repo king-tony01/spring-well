@@ -137,7 +137,7 @@ export function portfolioView(data) {
                 ${specialAccounts
                   .map((user) => {
                     return `<div class="atm">
-                <div class="atm-menu ${user.id}">
+                <div class="atm-menu cl-${user.id}">
                     <i class="fas fa-close closeMenu" id="${user.id}"></i>
                     <div class="inner" data-id="fund">
                       <i class="fas fa-wallet"></i> Fund

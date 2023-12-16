@@ -342,7 +342,7 @@ const server = http.createServer(async (req, res) => {
       try {
         let transaction = JSON.parse(body);
         if (transaction.type == "Deposit") {
-          const { receiverID } = await getUserID(Number(transaction.owner));
+          const receiverID = await getUserID(Number(transaction.owner));
           const payment = {
             owner: receiverID.id,
             type: transaction.type,

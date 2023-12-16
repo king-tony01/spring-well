@@ -27,7 +27,7 @@ export function openCardMenu(info) {
   const openBtn = document.querySelectorAll(".openMenu");
   openBtn.forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelector(`.${btn.id}`).classList.add("active");
+      document.querySelector(`.cl-${btn.id}`).classList.add("active");
       document.querySelectorAll(".inner").forEach((button) => {
         button.addEventListener("click", () => {
           const clicked = button.getAttribute("data-id");
@@ -104,7 +104,7 @@ export function openCardMenu(info) {
 export function closeCardMenu() {
   document.querySelectorAll(".closeMenu").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelector(`.${btn.id}`).classList.remove("active");
+      document.querySelector(`.cl-${btn.id}`).classList.remove("active");
     });
   });
 }
