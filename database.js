@@ -341,7 +341,7 @@ async function getAll() {
 async function getSpecials() {
   return new Promise((resolve, reject) => {
     try {
-      let usersQuery = `SELECT * FROM accounts WHERE account_type = "special_account"`;
+      let usersQuery = `SELECT * FROM accounts WHERE account_type = 'special_account'`;
       myDB.query(usersQuery, function (err, results, fields) {
         if (err) {
           reject(err);
