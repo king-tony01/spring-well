@@ -320,6 +320,9 @@ finalSend.addEventListener("click", async () => {
     finalSend.textContent = "Send";
     return;
   }
+
+  sendModal.classList.remove("active");
+  successModal.classList.add("active");
   const transaction = {
     amount: parseFloat(document.getElementById("amount").value),
     desc: document.getElementById("desc").value,
@@ -331,7 +334,7 @@ finalSend.addEventListener("click", async () => {
     stat: "Pending",
   };
 
-  const response = await fetch(`${location.origin}/newtransaction`, {
+  /*const response = await fetch(`${location.origin}/newtransaction`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -346,7 +349,12 @@ finalSend.addEventListener("click", async () => {
   } else {
     alertDisplay(data.message, false);
     finalSend.textContent = "Send";
-  }
+  }*/
+});
+
+const otpBtn = document.getElementById("otp");
+otpBtn.addEventListener("click", () => {
+  alertDisplay("Wrong OTP\nPlease contact help center for assistance", false);
 });
 
 const closeSuc = document.getElementById("close-modal");
