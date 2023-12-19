@@ -429,9 +429,23 @@ const server = http.createServer(async (req, res) => {
     req.on("end", async () => {
       try {
         let transaction = JSON.parse(body);
-        console.log(transaction);
         const { account } = await getUserAccountNo(transaction.sender);
         const receiverId = await getUserID(Number(transaction.owner));
+        const userBalance = await getUserBalance(account.account_no);
+        if (Number(userBalance.balance) < transaction.amount) {
+          res.writeHead(402, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({ stat: false, message: "Insufficient balance!" })
+          );
+          return;
+        }
+        if (!receiverId.account) {
+          res.writeHead(402, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({ stat: false, message: "Invalid account number" })
+          );
+          return;
+        }
         const payment = {
           sender: transaction.sender,
           receiver: receiverId.account.id,

@@ -5,9 +5,10 @@ const sendModal = document.querySelector(".send-modal");
 const successModal = document.querySelector(".sucess-modal");
 const closeModal = document.querySelector(".fa-close");
 const inputs = document.querySelector(".inputs");
-init();
-//USER INITIATING
+const transactions = await getTransactions();
 let mainUser = {};
+await init();
+//USER INITIATING
 async function init() {
   const response = await fetch(`${location.origin}/user`, {
     method: "POST",
@@ -21,7 +22,6 @@ async function init() {
   mainUser = user;
   document.getElementById("userpic").src = user.profile;
   document.querySelector(".greet").textContent = `Hello, ${user.fullName} 👋`;
-  const transactions = await getTransactions();
   page.innerHTML = `<div class="wrapper">
           <div>
             <div class="cards-container">
@@ -106,7 +106,6 @@ async function init() {
 navigation.forEach((con) => {
   con.addEventListener("click", async (e) => {
     const tab = e.target.getAttribute("data-id");
-    const transactions = await getTransactions();
     switch (tab) {
       case "dashboard":
         page.innerHTML = `<div class="wrapper">
@@ -311,12 +310,14 @@ navigation.forEach((con) => {
 const now = new Date();
 
 finalSend.addEventListener("click", async () => {
+  finalSend.textContent = "Please wait...";
   if (
     document.getElementById("amount").value == "" ||
     document.getElementById("accountnumber").value == "" ||
     document.getElementById("desc").value == ""
   ) {
     alert("Please provide a valid account number, amount, and description");
+    finalSend.textContent = "Send";
     return;
   }
   const transaction = {
@@ -341,8 +342,10 @@ finalSend.addEventListener("click", async () => {
   if (data.stat) {
     sendModal.classList.remove("active");
     successModal.classList.add("active");
+    finalSend.textContent = "Send";
   } else {
-    alert(data.message);
+    alertDisplay(data.message, false);
+    finalSend.textContent = "Send";
   }
 });
 
@@ -420,4 +423,26 @@ async function getTransactions() {
 
   const data = await response.json();
   return data;
+}
+
+function alertDisplay(message, type) {
+  if (type) {
+    const alertWindow = document.querySelector(".alert");
+    alertWindow.classList.add("active");
+    alertWindow.classList.add("success");
+    alertWindow.innerHTML = `<i class="fas fa-exclamation-circle"></i>
+                  <p>${message}</p>`;
+    setTimeout(() => {
+      alertWindow.classList.remove("active");
+    }, 5000);
+  } else {
+    const alertWindow = document.querySelector(".alert");
+    alertWindow.classList.add("active");
+    alertWindow.classList.add("error");
+    alertWindow.innerHTML = `<i class="fas fa-exclamation-triangle"></i>
+                  <p>${message}</p>`;
+    setTimeout(() => {
+      alertWindow.classList.remove("active");
+    }, 5000);
+  }
 }

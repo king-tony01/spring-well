@@ -382,12 +382,18 @@ export function confirmAction() {
   modal.innerHTML = `<div class="confirm">
             <p>Are you sure you want to continue this operation?</p>
             <div class="confirm-wrapper">
-              <button id="close" class="no">No</button>
-              <button id="yes">Yes</button>
+              <button id="close" class="no act" data-id="no">No</button>
+              <button id="yes" class="act" data-id="yes">Yes</button>
             </div>
           </div>`;
-  document.getElementById("close").addEventListener("click", () => {
-    closeForm();
+  document.querySelectorAll(".act").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (btn.getAttribute("data-id") == "yes") {
+        location.replace(`${location.origin}/admin`);
+      } else {
+        closeForm();
+      }
+    });
   });
 }
 

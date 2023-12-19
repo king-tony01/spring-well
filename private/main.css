@@ -12,6 +12,42 @@
   font-family: "Poppins", sans-serif;
 }
 
+.alert {
+  padding: 20px;
+  min-width: 350px;
+  display: flex;
+  align-items: center;
+  background: var(--secondary);
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: 0.5s all;
+  z-index: 10;
+}
+
+.alert.active {
+  top: 50px;
+  left: 50%;
+  opacity: 1;
+}
+
+.alert .fas {
+  display: block;
+  margin-right: 10px;
+}
+
+.alert.success {
+  color: green;
+}
+.alert.error {
+  color: red;
+}
+
 .suc-head {
   display: flex;
   align-items: center;

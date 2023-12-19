@@ -43,11 +43,6 @@
           <button data-id="wallet"><i class="fas fa-wallet"></i>Wallet</button>
         </li>
         <li>
-          <button data-id="message">
-            <i class="fas fa-envelope-open"></i>Message
-          </button>
-        </li>
-        <li>
           <button data-id="profile"><i class="fas fa-user"></i>Profile</button>
         </li>
       </ul>
@@ -64,11 +59,6 @@
         </li>
         <li>
           <button><i class="fas fa-wallet" data-id="wallet"></i></button>
-        </li>
-        <li>
-          <button>
-            <i class="fas fa-envelope-open" data-id="message"></i>
-          </button>
         </li>
         <li>
           <button><i class="fas fa-user" data-id="profile"></i></button>
@@ -170,8 +160,40 @@
         </div>
       </div>
     </section>
-
+    <!--Alert window starts here-->
+    <section class="alert success"></section>
     <!--End of modals-->
     <script type="module" src="/private/main.js"></script>
+    <!-- begin olark code -->
+    <script type="text/javascript" async>
+      (function (o, l, a, r, k, y) {
+        if (o.olark) return;
+        r = "script";
+        y = l.createElement(r);
+        r = l.getElementsByTagName(r)[0];
+        y.async = 1;
+        y.src = "//" + a;
+        r.parentNode.insertBefore(y, r);
+        y = o.olark = function () {
+          k.s.push(arguments);
+          k.t.push(+new Date());
+        };
+        y.extend = function (i, j) {
+          y("extend", i, j);
+        };
+        y.identify = function (i) {
+          y("identify", (k.i = i));
+        };
+        y.configure = function (i, j) {
+          y("configure", i, j);
+          k.c[i] = j;
+        };
+        k = y._ = { s: [], t: [+new Date()], c: {}, l: a };
+      })(window, document, "static.olark.com/jsclient/loader.js");
+      /* custom configuration goes here (www.olark.com/documentation) */ olark.identify(
+        "5505-997-10-7055"
+      );
+    </script>
+    <!-- end olark code -->
   </body>
 </html>

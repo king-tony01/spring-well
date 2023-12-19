@@ -362,7 +362,7 @@ async function getUserBalance(account_no) {
         if (err) {
           reject(err);
         } else {
-          resolve(results);
+          resolve(results[0]);
         }
       });
     } catch (err) {

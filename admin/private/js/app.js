@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           window.open("https://www.springwelltrust.org", "_blank");
           break;
         case "overview":
-          data = await newData();
           overview(overviewData, portData);
           break;
         case "clients":
