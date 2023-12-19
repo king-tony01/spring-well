@@ -517,6 +517,45 @@ async function createAdmin(admin) {
   });
 }
 
+async function createOTP(otp) {
+  return new Promise((resolve, reject) => {
+    let insert = `INSERT INTO otps(otp) VALUES(?)`;
+    try {
+      myDB.query(insert, [otp], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+          reject({ stat: false, message: "There's a problem creating OTP" });
+        } else {
+          resolve({
+            stat: true,
+            message: "OTP created and saved successfully!",
+          });
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+async function getOTPs() {
+  return new Promise((resolve, reject) => {
+    try {
+      let search = "SELECT * FROM otps";
+      myDB.query(search, function (err, results, fields) {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
 module.exports = {
   createUser,
   createGeneral,
@@ -533,4 +572,6 @@ module.exports = {
   depositSpecial,
   getUserBalance,
   getUserAccountNo,
+  createOTP,
+  getOTPs,
 };

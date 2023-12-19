@@ -1,8 +1,9 @@
-import { clientsView, overview, portfolioView } from "./components.js";
+import { OTPview, clientsView, overview, portfolioView } from "./components.js";
 import { confirmAction, getJSON } from "./helpers.js";
 document.addEventListener("DOMContentLoaded", async () => {
   const adminId = `${location.search.slice(4)}`;
   const admin = await getJSON({ id: adminId }, "/admin/detail");
+  const otps = await getJSON(null, "/admin/otps");
   const username = document.querySelectorAll(".admin-name");
   const email = document.querySelector(".admin-email");
   email.textContent = admin[0].email;
@@ -46,6 +47,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           break;
         case "portfolio":
           portfolioView(portData);
+          break;
+        case "otp":
+          OTPview(otps);
           break;
         case "logout":
           confirmAction();

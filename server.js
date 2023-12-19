@@ -28,6 +28,8 @@ const {
   getUserBalance,
   getUserAccountNo,
   createGeneral,
+  createOTP,
+  getOTPs,
 } = require("./database.js");
 const { message } = require("./mailer.js");
 
@@ -455,6 +457,28 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify(err));
       }
     });
+  }
+
+  if (pathname == "newotp") {
+    try {
+      let body;
+      req.on("data", (chunk) => {
+        body = chunk;
+      });
+      req.on("end", async () => {
+        let data = JSON.parse(body);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(await createOTP(data)));
+      });
+    } catch (err) {
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(err));
+    }
+  }
+
+  if (pathname == "/admin/otps") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(await getOTPs()));
   }
 });
 

@@ -569,3 +569,26 @@ main nav h1 {
 .client-preview .fa-close:hover {
   background: var(--background);
 }
+
+.otp-view button {
+  padding: 10px 30px;
+  border-radius: 10px;
+  color: var(--secondary);
+  background: green;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.otp-list {
+  max-height: 600px;
+  overflow-y: scroll;
+}
+
+.otp-list li {
+  list-style: none;
+  padding: 10px;
+}
+
+.otp-list li:nth-child(even) {
+  background: #fff6eb;
+}

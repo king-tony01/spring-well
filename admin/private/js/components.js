@@ -1,4 +1,9 @@
-import { closeCardMenu, openCardMenu, activateForm } from "./helpers.js";
+import {
+  closeCardMenu,
+  openCardMenu,
+  activateForm,
+  createOTP,
+} from "./helpers.js";
 
 export function overview(items, data) {
   const { users, trans, revenue } = items;
@@ -303,4 +308,40 @@ export function clientPreview(data) {
     .addEventListener("click", () => {
       modal.classList.remove("active");
     });
+}
+
+export function OTPview(otps) {
+  if (otps.length > 0) {
+    document.querySelector(".page").innerHTML = `<div class="otp-view">
+            <h2>OTP</h2>
+            <div class="add-otp">
+              <button id="generate">Generate New</button>
+            </div>
+            <ul class="otp-list">
+              ${otps
+                .map((otp) => {
+                  return `<li>${otp.otp}</li>`;
+                })
+                .join(" ")}
+            </ul>
+          </div>`;
+    const generateBtn = document.getElementById("generate");
+    generateBtn.addEventListener("click", async () => {
+      await createOTP();
+    });
+  } else {
+    document.querySelector(".page").innerHTML = `<div class="otp-view">
+            <h2>OTP</h2>
+            <div class="add-otp">
+              <button id="generate">Generate New</button>
+            </div>
+            <ul class="otp-list">
+              <p>No OTP avaliable yet</p>
+            </ul>
+          </div>`;
+    const generateBtn = document.getElementById("generate");
+    generateBtn.addEventListener("click", async () => {
+      await createOTP();
+    });
+  }
 }

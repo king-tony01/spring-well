@@ -438,3 +438,28 @@ export function alertDisplay(message, type) {
     }, 5000);
   }
 }
+
+export async function createOTP() {
+  const generate = document.getElementById("generate");
+  generate.textContent = "Generating...";
+  const characters = "0123456789";
+  let code = "";
+  for (let i = 0; i < 8; i++) {
+    let index = Math.floor(Math.random() * characters.length);
+    code += characters.charAt(index);
+  }
+
+  const response = await fetch(`${location.origin}/newotp`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(+code),
+  });
+  const resData = await response.json();
+  if (resData.stat) {
+    alertDisplay(resData.message, true);
+  } else {
+    alertDisplay(resData.message, false);
+  }
+}
