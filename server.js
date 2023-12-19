@@ -439,13 +439,6 @@ const server = http.createServer(async (req, res) => {
           );
           return;
         }
-        if (!receiverId.account) {
-          res.writeHead(402, { "Content-Type": "application/json" });
-          res.end(
-            JSON.stringify({ stat: false, message: "Invalid account number" })
-          );
-          return;
-        }
         const payment = {
           sender: transaction.sender,
           receiver: receiverId.account.id,
@@ -461,8 +454,14 @@ const server = http.createServer(async (req, res) => {
           account_no: account.account_no,
           type: "subtract",
         });
+        await depositUser(payment);
         res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify(await depositUser(payment)));
+        res.end(
+          JSON.stringify({
+            stat: true,
+            message: "Payment placed successfully!",
+          })
+        );
       } catch (err) {
         console.log(err);
         res.writeHead(500, { "Content-Type": "application/json" });
