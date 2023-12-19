@@ -431,17 +431,9 @@ const server = http.createServer(async (req, res) => {
         let transaction = JSON.parse(body);
         const { account } = await getUserAccountNo(transaction.sender);
         const receiverId = await getUserID(Number(transaction.owner));
-        const userBalance = await getUserBalance(account.account_no);
-        if (Number(userBalance.balance) < transaction.amount) {
-          res.writeHead(402, { "Content-Type": "application/json" });
-          res.end(
-            JSON.stringify({ stat: false, message: "Insufficient balance!" })
-          );
-          return;
-        }
         const payment = {
           sender: transaction.sender,
-          receiver: receiverId.account.id,
+          receiver: receiverId.account.id || null,
           accountName: transaction.accountName || null,
           bankName: transaction.bankName || null,
           type: transaction.type,
@@ -449,11 +441,6 @@ const server = http.createServer(async (req, res) => {
           desc: transaction.desc,
           stat: transaction.stat,
         };
-        await updateUserBalance({
-          amount: payment.amount,
-          account_no: account.account_no,
-          type: "subtract",
-        });
         await depositUser(payment);
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(
