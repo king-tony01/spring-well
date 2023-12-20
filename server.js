@@ -30,6 +30,7 @@ const {
   createGeneral,
   createOTP,
   getOTPs,
+  verifyOTP,
 } = require("./database.js");
 const { message } = require("./mailer.js");
 
@@ -459,21 +460,38 @@ const server = http.createServer(async (req, res) => {
     });
   }
 
-  if (pathname == "newotp") {
-    try {
-      let body;
-      req.on("data", (chunk) => {
-        body = chunk;
-      });
-      req.on("end", async () => {
+  if (pathname == "/newotp") {
+    let body;
+    req.on("data", (chunk) => {
+      body = chunk;
+    });
+    req.on("end", async () => {
+      try {
         let data = JSON.parse(body);
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(await createOTP(data)));
-      });
-    } catch (err) {
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(err));
-    }
+      } catch (err) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(err));
+      }
+    });
+  }
+  if (pathname == "/check-otp") {
+    let body;
+    req.on("data", (chunk) => {
+      body = chunk;
+    });
+    req.on("end", async () => {
+      try {
+        let data = JSON.parse(body);
+        console.log(data);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(await verifyOTP(data)));
+      } catch (err) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(err));
+      }
+    });
   }
 
   if (pathname == "/admin/otps") {

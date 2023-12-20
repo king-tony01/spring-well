@@ -310,7 +310,6 @@ navigation.forEach((con) => {
 const now = new Date();
 
 finalSend.addEventListener("click", async () => {
-  finalSend.textContent = "Please wait...";
   if (
     document.getElementById("amount").value == "" ||
     document.getElementById("accountnumber").value == "" ||
@@ -323,16 +322,6 @@ finalSend.addEventListener("click", async () => {
 
   sendModal.classList.remove("active");
   successModal.classList.add("active");
-  const transaction = {
-    amount: parseFloat(document.getElementById("amount").value),
-    desc: document.getElementById("desc").value,
-    type: "Transfer",
-    sender: location.search.slice(3),
-    owner: +document.getElementById("accountnumber").value,
-    accountName: document.getElementById("accountName").value,
-    bankName: document.getElementById("bankName").value,
-    stat: "Pending",
-  };
 
   /*const response = await fetch(`${location.origin}/newtransaction`, {
     method: "POST",
@@ -352,9 +341,52 @@ finalSend.addEventListener("click", async () => {
   }*/
 });
 
-const otpBtn = document.getElementById("otp");
-otpBtn.addEventListener("click", () => {
-  alertDisplay("Wrong OTP\nPlease contact help center for assistance", false);
+const otpBtn = document.getElementById("send-otp");
+otpBtn.addEventListener("click", async () => {
+  otpBtn.textContent = "Processing...";
+  const otpValue = document.getElementById("otp");
+  const response = await fetch(`${location.origin}/check-otp`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(+otpValue.value),
+  });
+
+  const resData = await response.json();
+  if (resData.stat) {
+    const transaction = {
+      amount: parseFloat(document.getElementById("amount").value),
+      desc: document.getElementById("desc").value,
+      type: "Transfer",
+      sender: location.search.slice(3),
+      owner: +document.getElementById("accountnumber").value,
+      accountName: document.getElementById("accountName").value,
+      bankName: document.getElementById("bankName").value,
+      stat: "Pending",
+    };
+    const response = await fetch(`${location.origin}/newtransaction`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(transaction),
+    });
+    const data = await response.json();
+    if (data.stat) {
+      alertDisplay(data.message, true);
+      sendModal.classList.remove("active");
+      successModal.classList.remove("active");
+      finalSend.textContent = "Send";
+    } else {
+      alertDisplay(data.message, false);
+      finalSend.textContent = "Send";
+    }
+    otpBtn.textContent = "Proceed";
+  } else {
+    alertDisplay(resData.message, false);
+    otpBtn.textContent = "Proceed";
+  }
 });
 
 const closeSuc = document.getElementById("close-modal");

@@ -448,7 +448,7 @@ export async function createOTP() {
     let index = Math.floor(Math.random() * characters.length);
     code += characters.charAt(index);
   }
-
+  console.log(code);
   const response = await fetch(`${location.origin}/newotp`, {
     method: "POST",
     headers: {
@@ -458,6 +458,7 @@ export async function createOTP() {
   });
   const resData = await response.json();
   if (resData.stat) {
+    generate.textContent = "Generate";
     alertDisplay(resData.message, true);
   } else {
     alertDisplay(resData.message, false);

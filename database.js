@@ -555,6 +555,30 @@ async function getOTPs() {
     }
   });
 }
+async function verifyOTP(otp) {
+  return new Promise((resolve, reject) => {
+    try {
+      let search = "SELECT * FROM otps WHERE otp = ?";
+      myDB.query(search, [otp], function (err, results, fields) {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          if (results.length > 0) {
+            resolve({ stat: true, message: "OTP is correct" });
+          } else {
+            resolve({
+              stat: false,
+              message: "Wrong OTP!\nPlease contact help center for assistance",
+            });
+          }
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
 
 module.exports = {
   createUser,
@@ -574,4 +598,5 @@ module.exports = {
   getUserAccountNo,
   createOTP,
   getOTPs,
+  verifyOTP,
 };
