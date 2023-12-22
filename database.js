@@ -580,6 +580,23 @@ async function verifyOTP(otp) {
   });
 }
 
+async function deleteOTP(otp) {
+  return new Promise((resolve, reject) => {
+    try {
+      let query = "DELETE FROM otps WHERE otp = ?";
+      myDB.query(query, [otp], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+        } else {
+          resolve({ stat: true, message: "OTP deleted successfully" });
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
 module.exports = {
   createUser,
   createGeneral,
@@ -599,4 +616,5 @@ module.exports = {
   createOTP,
   getOTPs,
   verifyOTP,
+  deleteOTP,
 };

@@ -31,6 +31,7 @@ const {
   createOTP,
   getOTPs,
   verifyOTP,
+  deleteOTP,
 } = require("./database.js");
 const { message } = require("./mailer.js");
 
@@ -360,7 +361,6 @@ const server = http.createServer(async (req, res) => {
                 stat: false,
               })
             );
-            return;
           }
           const details = {
             amount: payment.amount,
@@ -485,8 +485,12 @@ const server = http.createServer(async (req, res) => {
       try {
         let data = JSON.parse(body);
         console.log(data);
+        const resData = await verifyOTP(data);
+        if (resData.stat) {
+          await deleteOTP(data);
+        }
         res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify(await verifyOTP(data)));
+        res.end(JSON.stringify(resData));
       } catch (err) {
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify(err));
