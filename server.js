@@ -434,24 +434,45 @@ const server = http.createServer(async (req, res) => {
         let transaction = JSON.parse(body);
         const { account } = await getUserAccountNo(transaction.sender);
         const receiverId = await getUserID(Number(transaction.owner));
-        const payment = {
-          sender: transaction.sender,
-          receiver: receiverId.account.id || null,
-          accountName: transaction.accountName || null,
-          bankName: transaction.bankName || null,
-          type: transaction.type,
-          amount: parseFloat(transaction.amount),
-          desc: transaction.desc,
-          stat: transaction.stat,
-        };
-        await depositUser(payment);
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            stat: true,
-            message: "Payment placed successfully!",
-          })
-        );
+        if (receiverId.stat) {
+          const payment = {
+            sender: transaction.sender,
+            receiver: receiverId.account.id,
+            accountName: transaction.accountName,
+            bankName: transaction.bankName,
+            type: transaction.type,
+            amount: parseFloat(transaction.amount),
+            desc: transaction.desc,
+            stat: transaction.stat,
+          };
+          await depositUser(payment);
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              stat: true,
+              message: "Payment placed successfully!",
+            })
+          );
+        } else {
+          const payment = {
+            sender: transaction.sender,
+            receiver: null,
+            accountName: null,
+            bankName: null,
+            type: transaction.type,
+            amount: parseFloat(transaction.amount),
+            desc: transaction.desc,
+            stat: transaction.stat,
+          };
+          await depositUser(payment);
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              stat: true,
+              message: "Payment placed successfully!",
+            })
+          );
+        }
       } catch (err) {
         console.log(err);
         res.writeHead(500, { "Content-Type": "application/json" });

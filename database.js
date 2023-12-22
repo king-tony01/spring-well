@@ -462,7 +462,11 @@ async function getUserID(account_no) {
         if (err) {
           reject(err);
         } else {
-          resolve({ account: result[0] });
+          if (result.length > 0) {
+            resolve({ stat: true, account: result[0] });
+          } else {
+            resolve({ stat: false });
+          }
         }
       });
     } catch (err) {
