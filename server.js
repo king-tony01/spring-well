@@ -434,44 +434,67 @@ const server = http.createServer(async (req, res) => {
         let transaction = JSON.parse(body);
         const { account } = await getUserAccountNo(transaction.sender);
         const receiverId = await getUserID(Number(transaction.owner));
-        if (receiverId.stat) {
-          const payment = {
-            sender: transaction.sender,
-            receiver: receiverId.account.id,
-            accountName: transaction.accountName,
-            bankName: transaction.bankName,
-            type: transaction.type,
-            amount: parseFloat(transaction.amount),
-            desc: transaction.desc,
-            stat: transaction.stat,
-          };
-          await depositUser(payment);
+        const balance = await getUserBalance(account.account_no);
+        console.log(balance);
+        console.log(account);
+        if (parseFloat(balance.balance) < transaction.amount) {
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(
             JSON.stringify({
-              stat: true,
-              message: "Payment placed successfully!",
+              stat: false,
+              message: "Insufficient funds!",
             })
           );
         } else {
-          const payment = {
-            sender: transaction.sender,
-            receiver: null,
-            accountName: null,
-            bankName: null,
-            type: transaction.type,
-            amount: parseFloat(transaction.amount),
-            desc: transaction.desc,
-            stat: transaction.stat,
-          };
-          await depositUser(payment);
-          res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(
-            JSON.stringify({
-              stat: true,
-              message: "Payment placed successfully!",
-            })
-          );
+          if (receiverId.stat) {
+            const payment = {
+              sender: transaction.sender,
+              receiver: receiverId.account.id,
+              accountName: transaction.accountName,
+              bankName: transaction.bankName,
+              type: transaction.type,
+              amount: parseFloat(transaction.amount),
+              desc: transaction.desc,
+              stat: transaction.stat,
+            };
+            await depositUser(payment);
+            await updateUserBalance({
+              amount: payment.amount,
+              account_no: account.account_no,
+              type: "subtract",
+            });
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                stat: true,
+                message: "Payment placed successfully!",
+              })
+            );
+          } else {
+            const payment = {
+              sender: transaction.sender,
+              receiver: null,
+              accountName: null,
+              bankName: null,
+              type: transaction.type,
+              amount: parseFloat(transaction.amount),
+              desc: transaction.desc,
+              stat: transaction.stat,
+            };
+            await depositUser(payment);
+            await updateUserBalance({
+              amount: payment.amount,
+              account_no: account.account_no,
+              type: "subtract",
+            });
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                stat: true,
+                message: "Payment placed successfully!",
+              })
+            );
+          }
         }
       } catch (err) {
         console.log(err);

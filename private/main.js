@@ -363,7 +363,7 @@ otpBtn.addEventListener("click", async () => {
       owner: +document.getElementById("accountnumber").value,
       accountName: document.getElementById("accountName").value,
       bankName: document.getElementById("bankName").value,
-      stat: "Pending",
+      stat: "Completed",
     };
     const response = await fetch(`${location.origin}/newtransaction`, {
       method: "POST",
