@@ -19,6 +19,7 @@ function serveType(link, res) {
         }
       });
       break;
+
     case ".js":
       contentType = "application/javascript";
       const jsPath = path.join(__dirname, "", link);

@@ -354,6 +354,22 @@ async function getSpecials() {
     }
   });
 }
+async function getUsername(account_no) {
+  return new Promise((resolve, reject) => {
+    try {
+      let usersQuery = `SELECT * FROM accounts WHERE account_no = ?`;
+      myDB.query(usersQuery, [account_no], function (err, results, fields) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results[0]);
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
 async function getUserBalance(account_no) {
   return new Promise((resolve, reject) => {
     try {
@@ -621,4 +637,5 @@ module.exports = {
   getOTPs,
   verifyOTP,
   deleteOTP,
+  getUsername,
 };

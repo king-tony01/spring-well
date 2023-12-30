@@ -32,8 +32,9 @@ const {
   getOTPs,
   verifyOTP,
   deleteOTP,
+  getUsername,
 } = require("./database.js");
-const { message } = require("./mailer.js");
+const { message, deliverTransaction } = require("./mailer.js");
 
 const server = http.createServer(async (req, res) => {
   const { pathname, query } = url.parse(req.url, true);
@@ -435,8 +436,6 @@ const server = http.createServer(async (req, res) => {
         const { account } = await getUserAccountNo(transaction.sender);
         const receiverId = await getUserID(Number(transaction.owner));
         const balance = await getUserBalance(account.account_no);
-        console.log(balance);
-        console.log(account);
         if (parseFloat(balance.balance) < transaction.amount) {
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(
@@ -463,13 +462,25 @@ const server = http.createServer(async (req, res) => {
               account_no: account.account_no,
               type: "subtract",
             });
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(
-              JSON.stringify({
-                stat: true,
-                message: "Payment placed successfully!",
-              })
-            );
+            const username = await getUsername(account.account_no);
+            console.log(username);
+            if (username) {
+              await deliverTransaction({
+                type: "Debit",
+                amount: transaction.amount,
+                account_no: account.account_no,
+                balance: username.balance,
+                account_name: username.full_name,
+                email: username.email,
+              });
+              res.writeHead(200, { "Content-Type": "application/json" });
+              res.end(
+                JSON.stringify({
+                  stat: true,
+                  message: "Payment placed successfully!",
+                })
+              );
+            }
           } else {
             const payment = {
               sender: transaction.sender,
@@ -528,7 +539,6 @@ const server = http.createServer(async (req, res) => {
     req.on("end", async () => {
       try {
         let data = JSON.parse(body);
-        console.log(data);
         const resData = await verifyOTP(data);
         if (resData.stat) {
           await deleteOTP(data);

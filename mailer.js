@@ -274,8 +274,139 @@ async function message(message) {
     }
   });
 }
+async function deliverTransaction(transaction) {
+  const mail = {
+    from: "Springwell Trust <admin@springwelltrust.org>",
+    to: transaction.email,
+    subject: "Transaction Alert",
+    html: `
+    <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .hero {
+        padding: 20px;
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+          url(https://cdn.pixabay.com/photo/2021/08/26/17/12/silhouettes-6576684_1280.jpg);
+        color: white;
+        background-size: cover;
+        background-position: center;
+        height: 30vh;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .hero p {
+        color: #efefef;
+      }
+
+      .wrap {
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        background: #eadbc8;
+        margin: 20px;
+      }
+
+      .wrap ul li {
+        padding: 10px;
+        list-style: none;
+      }
+
+      .wrap ul li:nth-child(even) {
+        background: #dac0a3;
+      }
+
+      #intro {
+        display: block;
+        padding: 20px;
+      }
+
+      footer {
+        background: #102c57;
+        padding: 20px;
+        color: white;
+      }
+
+      footer small {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      footer a {
+        color: #dac0a3;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero">
+      <h2>Springwell Trust</h2>
+      <p>Your Trusted Banking Partner</p>
+    </section>
+    <small id="intro"
+      >This is to inform you that a transaction has occured on your account with
+      the details below:</small
+    >
+    <section class="wrap">
+      <ul>
+        <li>Account Name: ${transaction.account_name}</li>
+        <li>Transaction Type: ${transaction.type}</li>
+        <li>Transaction Amount: ${transaction.amount}</li>
+        <li>Account Number: ${transaction.account_no}</li>
+        <li>Balance: ${transaction.balance}</li>
+      </ul>
+    </section>
+    <footer>
+      <small
+        >For additional information about this transaction, please contact our
+        Customer Fulfillment Center:
+        <a href="mailto:springwelltrustlink@mail.com"
+          >springwelltrustlink@mail.com</a
+        ></small
+      >
+      <small
+        >Your account information is private. Please do not disclose your login
+        credentials or card details to anyone. Avoid clicking on suspicious
+        links in emails or text messages.</small
+      >
+    </footer>
+  </body>
+</html>
+
+`,
+  };
+
+  await new Promise((resolve, reject) => {
+    try {
+      transporter.sendMail(mail, (err, info) => {
+        if (err) {
+          reject({ message: `There is problem sending email: ${err}` });
+          console.log(`There is problem sending email: ${err}`);
+        } else {
+          resolve({
+            message: `Email sent succesfully: ${info.response}`,
+          });
+          console.log(`Email sent succesfully: ${info.response}`);
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+}
 
 module.exports = {
   deliverMail,
   message,
+  deliverTransaction,
 };
