@@ -354,6 +354,30 @@ async function getSpecials() {
     }
   });
 }
+
+async function deleteClient({ id }) {
+  return new Promise((resolve, reject) => {
+    try {
+      let usersQuery = `DELETE FROM accounts WHERE id_no = ${id}`;
+      myDB.query(usersQuery, function (err, results, fields) {
+        if (err) {
+          reject({
+            stat: false,
+            message: "Oh sorry!\nOperation could not be completed",
+            error: err,
+          });
+        } else {
+          resolve({
+            message: "Client deleted successfully",
+            stat: true,
+          });
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
 async function getUsername(account_no) {
   return new Promise((resolve, reject) => {
     try {
@@ -638,4 +662,5 @@ module.exports = {
   verifyOTP,
   deleteOTP,
   getUsername,
+  deleteClient,
 };

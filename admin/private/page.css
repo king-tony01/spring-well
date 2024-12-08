@@ -570,6 +570,18 @@ main nav h1 {
   background: var(--background);
 }
 
+.client-preview .delete-client {
+  display: block;
+  font-size: 16px;
+  color: white;
+  background: red;
+  width: 100%;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
 .otp-view button {
   padding: 10px 30px;
   border-radius: 10px;

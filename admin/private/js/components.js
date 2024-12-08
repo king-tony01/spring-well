@@ -3,6 +3,7 @@ import {
   openCardMenu,
   activateForm,
   createOTP,
+  getJSON,
 } from "./helpers.js";
 
 export function overview(items, data) {
@@ -301,6 +302,7 @@ export function clientPreview(data) {
               <small>Card: ${data.card}</small>
               <small>Acc No: ${data.account_no}</small>
               <small>Balance: <b>$${data.balance}</small></b>
+              <button class="delete-client">Delete client</button>
             </div>
           </div>`;
   document
@@ -308,6 +310,28 @@ export function clientPreview(data) {
     .addEventListener("click", () => {
       modal.classList.remove("active");
     });
+  const deleteBtn = document.querySelector(".delete-client");
+  deleteBtn.addEventListener("click", async () => {
+    deleteBtn.setAttribute("disabled", "");
+    deleteBtn.textContent = "Deleting client...";
+    deleteBtn.style.backgroundColor = "#f59090";
+    try {
+      const response = await getJSON({ id: data.id_no }, "/delete-client");
+      if (response.stat) {
+        deleteBtn.removeAttribute("disabled");
+        deleteBtn.textContent = "Deleted client!";
+        deleteBtn.style.backgroundColor = "grey";
+        modal.classList.remove("active");
+        location.reload();
+      } else {
+        deleteBtn.removeAttribute("disabled");
+        deleteBtn.textContent = "Try again please";
+        deleteBtn.style.backgroundColor = "red";
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  });
 }
 
 export function OTPview(otps) {

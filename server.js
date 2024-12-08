@@ -33,6 +33,7 @@ const {
   verifyOTP,
   deleteOTP,
   getUsername,
+  deleteClient,
 } = require("./database.js");
 const { message, deliverTransaction } = require("./mailer.js");
 
@@ -287,6 +288,23 @@ const server = http.createServer(async (req, res) => {
   if (pathname == "/all-special") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(await getSpecials()));
+  }
+
+  if (pathname == "/delete-client") {
+    let body;
+    req.on("data", (chunk) => {
+      body = chunk;
+    });
+    req.on("end", async () => {
+      const { id } = JSON.parse(body);
+      try {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(await await deleteClient({ id })));
+      } catch (err) {
+        res.writeHead(402, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(err));
+      }
+    });
   }
 
   if (pathname == "/admin/detail") {
